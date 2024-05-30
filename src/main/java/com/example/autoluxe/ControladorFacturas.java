@@ -4,6 +4,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -15,6 +19,21 @@ public class ControladorFacturas
     private AnchorPane contenedor;
     @FXML
     private ImageView btnCerrarSesion;
+    @FXML
+    public static TextField tfTotalPagar;
+    //Tabla de los productos/servicios que se añaden a la factura
+    @FXML
+    public static TableView<?> tablaFactura;
+    @FXML
+    private TableColumn<?, String> colDescripcion;
+    @FXML
+    private TableColumn<?, Integer> colCantidad;
+    @FXML
+    private TableColumn<?, Float> colPrecioU;
+    @FXML
+    private TableColumn<?, Float> colPrecioT;
+    @FXML
+    private TableColumn<?, Button> colBorrar;
     @FXML
     private void cerrarVentana() {
         try {

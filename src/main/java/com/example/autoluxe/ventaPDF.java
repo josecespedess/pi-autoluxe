@@ -2,12 +2,17 @@ package com.example.autoluxe;
 
 import ClasesObjetos.BDautoluxe;
 import ClasesObjetos.Clientes;
+import ClasesObjetos.DatosFactura;
 import ClasesObjetos.Empleados;
 import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import javafx.collections.ObservableList;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
@@ -156,6 +161,50 @@ public class ventaPDF
             tablaProducto.addCell(producto2);
             tablaProducto.addCell(producto3);
             tablaProducto.addCell(producto4);
+            ObservableList<DatosFactura> datos= (ObservableList<DatosFactura>) ControladorFacturas.tablaFactura.getItems();
+            for (int i = 0; i < ControladorFacturas.tablaFactura.getItems().size(); i++)
+            {
+                String descripcion=datos.get(i).getDescripcion();
+                int cantidad=datos.get(i).getCantidad();
+                float precioU=datos.get(i).getPrecioU();
+                float precioT=datos.get(i).getPrecioT();
+
+                tablaProducto.addCell(String.valueOf(cantidad));
+                tablaProducto.addCell(descripcion);
+                tablaProducto.addCell(String.valueOf(precioU));
+                tablaProducto.addCell(String.valueOf(precioT));
+
+            }
+            doc.add(tablaProducto);
+
+            //Información del total a pagar
+            Paragraph info=new Paragraph();
+            info.add(Chunk.NEWLINE);
+            info.add("Total a pagar: " + ControladorFacturas.tfTotalPagar.getText());
+            info.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(info);
+
+            //Mensaje de firma
+            Paragraph firma=new Paragraph();
+            firma.add(Chunk.NEWLINE);
+            firma.add("Cancelación y firma\n\n");
+            firma.add("_____________________");
+            firma.setAlignment(Element.ALIGN_CENTER);
+            doc.add(firma);
+
+            //Mensaje de agradecimiento
+            Paragraph mensaje=new Paragraph();
+            mensaje.add(Chunk.NEWLINE);
+            mensaje.add("¡Gracias por su compra!");
+            mensaje.setAlignment(Element.ALIGN_CENTER);
+            doc.add(mensaje);
+
+            //Cerrar archivo ya estructurado y desarrollado con la información
+            doc.close();
+            archivo.close();
+
+            //Abrir factura
+            Desktop.getDesktop().open(file);
 
         }
         catch (Exception e)
