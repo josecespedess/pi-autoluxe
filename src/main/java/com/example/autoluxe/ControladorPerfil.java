@@ -90,7 +90,7 @@ public class ControladorPerfil implements Initializable {
     private ImageView btnCerrarSesion;
 
     @FXML
-    private Label lbCorreo;
+    private Label btnCorreo;
     private String correoUsuario = "";
 
     @Override
@@ -371,7 +371,7 @@ public class ControladorPerfil implements Initializable {
 
     public void setCorreoUsuario(String correo) {
         this.correoUsuario = correo;
-        this.lbCorreo.setText(correo);
+        this.btnCorreo.setText(correo);
         establecerDatos();
     }
 }

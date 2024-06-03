@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -27,7 +28,7 @@ import java.util.ResourceBundle;
 public class ControladorTaller  implements Initializable
 {
     @FXML
-    private Button btnCerrarSesion;
+    private ImageView btnCerrarSesion;
     @FXML
     private Label btnCorreo;
     private String correoUsuario = "";
