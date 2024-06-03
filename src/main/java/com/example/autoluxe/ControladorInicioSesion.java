@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -48,55 +49,68 @@ public class ControladorInicioSesion implements Initializable {
         bd.conectar();
         msgError1.setVisible(false);
         msgError2.setVisible(false);
-        if (edEmail.getText().isEmpty() || edContraseña.getText().isEmpty() || edEmail.getText().contains("@autoluxe.com") == false) {
-            if (edEmail.getText().isEmpty() || edEmail.getText().contains("@") == false) {
+        if(edEmail.getText().isEmpty()||edContraseña.getText().isEmpty()||edEmail.getText().contains("@autoluxe.com")==false)
+        {
+            if (edEmail.getText().isEmpty()||edEmail.getText().contains("@")==false)
+            {
                 msgError1.setVisible(true);
             }
-            if (edContraseña.getText().isEmpty()) {
+            if(edContraseña.getText().isEmpty())
+            {
                 msgError2.setVisible(true);
             }
-        } else {
-            String correo = "";
-            String contrasena = "";
-            try (Connection conexion = bd.getConnection()) {
-                String query = "SELECT correo,contraseña FROM empleados WHERE correo='" + edEmail.getText() + "'";
-                Statement st = conexion.createStatement();
-                ResultSet rs = st.executeQuery(query);
-                while (rs.next()) {
-                    correo = rs.getString("correo");
-                    contrasena = rs.getString("contraseña");
+        }
+        else
+        {
+            String correo="";
+            String contrasena="";
+            try(Connection conexion=bd.getConnection())
+            {
+                String query="SELECT correo,contraseña FROM empleados WHERE correo='"+edEmail.getText()+"'";
+                Statement st=conexion.createStatement();
+                ResultSet rs=st.executeQuery(query);
+                while (rs.next())
+                {
+                    correo=rs.getString("correo");
+                    contrasena=rs.getString("contraseña");
                 }
-                if (correo != "") {
-                    if (contrasena.equals(edContraseña.getText())) {
-                        abrirAplicacion();
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Diálogo de Alerta");
-                        alert.setHeaderText("Información Incorrecta");
-                        alert.setContentText("Contraseña incorrecta, estos datos no son válidos.");
-                        alert.showAndWait();
+                if(correo!="")
+                {
+                    if(contrasena.equals(edContraseña.getText()))
+                    {
+                        System.out.println("Antes de llamar a abrir aplicacion"+correo);
+                        abrirAplicacion(correo);
                     }
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Diálogo de Alerta");
-                    alert.setHeaderText("Información Incorrecta");
-                    alert.setContentText("Correo incorrecto, estos datos no son existentes.");
-                    alert.showAndWait();
+                    else
+                    {
+                        mostrarAlerta(Alert.AlertType.ERROR, "Información Incorrecta", "Contraseña incorrecta, estos datos no son válidos.");
+                    }
                 }
-            } catch (SQLException e) {
+                else
+                {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Información Incorrecta", "Correo incorrecto, estos datos no son existentes.");
+                }
+            }
+            catch(SQLException e)
+            {
                 e.printStackTrace();
             }
         }
     }
-
     @FXML
-    private void abrirAplicacion() {
+    private void abrirAplicacion(String correo) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("vista_inicio.fxml"));
             Parent root = loader.load();
+
+            System.out.println("Metodo abrir aplicacion"+correo);
+            // Obtener el controlador de la nueva vista y pasar el correo
+            ControladorInicio controlador = loader.getController();
+            controlador.setCorreoUsuario(correo);
+
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("AutoLuxe"); // Puedes establecer el título
-            nuevaVentana.setScene(new Scene(root, 1920, 1080));
+            nuevaVentana.setScene(new Scene(root,1920,1080));
             nuevaVentana.getIcons().add(new Image(getClass().getResourceAsStream("/imagenes/LogoAutoLuxe.png")));
             Stage ventanaActual = (Stage) bt1.getScene().getWindow();
             ventanaActual.close();
@@ -107,7 +121,8 @@ public class ControladorInicioSesion implements Initializable {
     }
 
     @FXML
-    public void abrirGmail() {
+    public void abrirGmail()
+    {
         String url = "https://www.google.com/intl/es/gmail/about/";
         try {
             java.awt.Desktop.getDesktop().browse(new URI(url));
@@ -115,9 +130,9 @@ public class ControladorInicioSesion implements Initializable {
             e.printStackTrace();
         }
     }
-
     @FXML
-    public void abrirInstagram() {
+    public void abrirInstagram()
+    {
         String url = "https://www.instagram.com/auto_luxe_js/";
         try {
             java.awt.Desktop.getDesktop().browse(new URI(url));
@@ -125,9 +140,9 @@ public class ControladorInicioSesion implements Initializable {
             e.printStackTrace();
         }
     }
-
     @FXML
-    public void abrirFacebook() {
+    public void abrirFacebook()
+    {
         String url = "https://www.facebook.com/profile.php?id=61558487721041";
         try {
             java.awt.Desktop.getDesktop().browse(new URI(url));
@@ -135,4 +150,18 @@ public class ControladorInicioSesion implements Initializable {
             e.printStackTrace();
         }
     }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String encabezado) {
+        mostrarAlerta(tipo, encabezado, null);
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String encabezado, String contenido) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle("Diálogo de Alerta");
+        alert.setHeaderText(encabezado);
+        alert.setContentText(contenido);
+        alert.showAndWait();
+    }
+
+
 }
