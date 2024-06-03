@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import static java.lang.Float.*;
+
 public class ControladorFacturas
 {
     @FXML
@@ -26,7 +28,17 @@ public class ControladorFacturas
     @FXML
     private ImageView btnCerrarSesion;
     @FXML
-    public static TextField tfTotalPagar;
+    public TextField precioTotalPagar;
+    @FXML
+    public TextField precioSubtotal;
+    @FXML
+    private TextField descuento;
+    @FXML
+    private TextField IVA;
+    @FXML
+    private TextField cambio;
+    @FXML
+    private TextField efectivo;
     @FXML
     private DatePicker dpFechaActual;
     @FXML
@@ -50,9 +62,10 @@ public class ControladorFacturas
     @FXML
     private Spinner<Integer> cantidadServicio;
     SpinnerValueFactory<Integer> vf=new SpinnerValueFactory.IntegerSpinnerValueFactory(1,100,1);
+    SpinnerValueFactory<Integer> vf2=new SpinnerValueFactory.IntegerSpinnerValueFactory(1,100,1);
     //Tabla de los productos/servicios que se añaden a la factura
     @FXML
-    public static TableView<?> tablaFactura;
+    private TableView<ProductosServiciosFacturas> tablaFactura;
     @FXML
     private TableColumn<ProductosServiciosFacturas, String> colDescripcion;
     @FXML
@@ -71,7 +84,8 @@ public class ControladorFacturas
         establecerIDProductos();
         establecerIDServicios();
         cantidadProducto.setValueFactory(vf);
-        cantidadServicio.setValueFactory(vf);
+        cantidadServicio.setValueFactory(vf2);
+        estblecerDatosFactura();
         iniciarColumnas();
     }
     // Establecer los DNIs en el ChoiceBox Clientes
@@ -111,9 +125,103 @@ public class ControladorFacturas
         cbServicio.setItems(listaIDs);
     }
     @FXML
+    public void generarfactura()
+    {
+        if((cbCliente.getValue()=="Seleccione cliente"||cbCliente.getValue()==null||cbCliente.getValue()=="")||(cbEmpleado.getValue()=="Seleccione empleado"||cbEmpleado.getValue()==null||cbEmpleado.getValue()=="")||(tablaFactura.getItems()==null))
+        {
+            mostrarAlerta(Alert.AlertType.WARNING,"Error al generar facturar.");
+        }
+        else
+        {
+
+        }
+    }
+    public void estblecerDatosFactura()
+    {
+        precioSubtotal.setText(Float.toString(establecerPrecioSubtotal()));
+        IVA.setText("21.00");
+        descuento.setText("0.00");
+        cambio.setText("0.00");
+        efectivo.setText("0.00");
+        if(descuento.getText().equals("0.00"))
+            precioTotalPagar.setText(Float.toString(establecerPrecioSubtotal()*1.21f));
+    }
+    public float establecerPrecioSubtotal()
+    {
+        float total = 0.0f;
+        for (ProductosServiciosFacturas item : tablaFactura.getItems()) {
+            total += item.getPrecioT();
+        }
+        return total;
+    }
+    @FXML
+    public void calcularEfectivo()
+    {
+        if(efectivo.getText().equals("0.00")||efectivo.getText().equals("0"))
+        {
+            cambio.setText(precioTotalPagar.getText());
+        }
+        else
+            cambio.setText(String.valueOf(Float.parseFloat(precioTotalPagar.getText())-Float.parseFloat(efectivo.getText())));
+    }
+    @FXML
+    public void establecerDescuento()
+    {
+        if(descuento.getText().equals("0.00")||descuento.getText().equals("0"))
+        {
+            precioTotalPagar.setText(Float.toString(establecerPrecioSubtotal()*1.21f));
+        }
+        else
+        {
+            float calculo=parseFloat(precioTotalPagar.getText())*(1+parseFloat(descuento.getText())/100);
+            precioTotalPagar.setText(String.valueOf(calculo));
+        }
+    }
+    @FXML
     public void anadirProducto()
     {
-
+        if(cbProducto.getValue()==""||cbProducto.getValue()=="Seleccione producto")
+        {
+            mostrarAlerta(Alert.AlertType.WARNING,"Especifique el id del producto");
+        }
+        else
+        {
+            String idProducto= (String) cbProducto.getValue();
+            Productos producto=BDautoluxe.obtenerProductoID(idProducto);
+            int cantidad=cantidadProducto.getValue();
+            Button clearButton = new Button("Borrar");
+            clearButton.setLayoutX(100);
+            clearButton.setLayoutY(100);
+            clearButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            ProductosServiciosFacturas prod=new ProductosServiciosFacturas(producto.getDescripcion(),cantidad,producto.getPrecio(),clearButton);
+            prod.getBorrar().setOnAction(event -> tablaFactura.getItems().remove(prod));
+            tablaFactura.getItems().add(prod);
+            cbProducto.setValue("Seleccione producto");
+            estblecerDatosFactura();
+        }
+    }
+    @FXML
+    public void anadirServicios()
+    {
+        if(cbServicio.getValue()==""||cbServicio.getValue()=="Seleccione servicio")
+        {
+            mostrarAlerta(Alert.AlertType.WARNING,"Especifique el id del servicio");
+        }
+        else
+        {
+            String idServicio= (String) cbServicio.getValue();
+            Servicios servicio=BDautoluxe.obtenerServicioID(idServicio);
+            int cantidad=cantidadServicio.getValue();
+            Button clearButton = new Button("Borrar");
+            clearButton.setLayoutX(100);
+            clearButton.setLayoutY(100);
+            clearButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            ProductosServiciosFacturas ser=new ProductosServiciosFacturas(servicio.getDescripcion(),cantidad,servicio.getPrecio(),clearButton);
+            ser.getBorrar().setOnAction(event -> tablaFactura.getItems().remove(ser));
+            tablaFactura.getItems().add(ser);
+            cbServicio.setValue("Seleccione servicio");
+            estblecerDatosFactura();
+        }
     }
     //Método para buscar Cliente
     @FXML
@@ -258,7 +366,10 @@ public class ControladorFacturas
         colPrecioU.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas, Float>("precioU"));
         colPrecioT.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas,Float>("precioT"));
         colBorrar.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas, Button>("borrar"));
+        tablaFactura.setItems(FXCollections.observableArrayList());
     }
+    public TableView<ProductosServiciosFacturas> getTablaFacturas() {return tablaFactura;}
+    public String getTotalAPagar() {return precioTotalPagar.getText();}
     /*
     MENU 8/8
      */

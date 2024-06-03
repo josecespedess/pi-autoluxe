@@ -2,8 +2,8 @@ package com.example.autoluxe;
 
 import ClasesObjetos.BDautoluxe;
 import ClasesObjetos.Clientes;
-import ClasesObjetos.DatosFactura;
 import ClasesObjetos.Empleados;
+import ClasesObjetos.ProductosServiciosFacturas;
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
@@ -161,8 +161,9 @@ public class ventaPDF
             tablaProducto.addCell(producto2);
             tablaProducto.addCell(producto3);
             tablaProducto.addCell(producto4);
-            ObservableList<DatosFactura> datos= (ObservableList<DatosFactura>) ControladorFacturas.tablaFactura.getItems();
-            for (int i = 0; i < ControladorFacturas.tablaFactura.getItems().size(); i++)
+            ControladorFacturas controladorFacturas=new ControladorFacturas();
+            ObservableList<ProductosServiciosFacturas> datos= (ObservableList<ProductosServiciosFacturas>) controladorFacturas.getTablaFacturas().getItems();
+            for (int i = 0; i < controladorFacturas.getTablaFacturas().getItems().size(); i++)
             {
                 String descripcion=datos.get(i).getDescripcion();
                 int cantidad=datos.get(i).getCantidad();
@@ -180,7 +181,7 @@ public class ventaPDF
             //Información del total a pagar
             Paragraph info=new Paragraph();
             info.add(Chunk.NEWLINE);
-            info.add("Total a pagar: " + ControladorFacturas.tfTotalPagar.getText());
+            info.add("Total a pagar: " + controladorFacturas.getTotalAPagar());
             info.setAlignment(Element.ALIGN_RIGHT);
             doc.add(info);
 

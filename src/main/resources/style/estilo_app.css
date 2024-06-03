@@ -82,24 +82,24 @@
 }
 
 #acFacturar {
-    -fx-background-color: #a3ff72;
-    -fx-text-fill: #000000;
+    -fx-background-color: #FFA423;
+    -fx-text-fill: #ffffff;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
 }
 
 #acFacturar:hover {
-    -fx-background-color: #a3ff72;
-    -fx-text-fill: #000000;
+    -fx-background-color: #FFA423;
+    -fx-text-fill: #ffffff;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
-    -fx-border-color: #000000;
+    -fx-border-color: #ffffff;
     -fx-border-width: 1px;
 }
 
 #acFacturar:pressed {
-    -fx-background-color: #000000;
-    -fx-text-fill: #a3ff72;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #FFA423;
 }
 
 #acCambio {
