@@ -253,7 +253,7 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="tvDNI" alignment="BOTTOM_LEFT" layoutX="437.0" layoutY="350.0" prefHeight="50.0" prefWidth="600.0" />
+                              <TextField fx:id="tvDNI" alignment="BOTTOM_LEFT" disable="true" editable="false" layoutX="437.0" layoutY="350.0" prefHeight="50.0" prefWidth="600.0" />
                               <Label layoutX="435.0" layoutY="355.0" text="DNI:">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
@@ -265,7 +265,7 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Button fx:id="btnGuardar" layoutX="437.0" layoutY="484.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="600.0" text="GUARDAR">
+                              <Button fx:id="btnGuardar" layoutX="437.0" layoutY="484.0" mnemonicParsing="false" onAction="#actualizarEmpleado" prefHeight="44.0" prefWidth="600.0" text="GUARDAR">
                                  <font>
                                     <Font name="Microsoft New Tai Lue Bold" size="14.0" />
                                  </font>
@@ -275,13 +275,7 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="tvRecuperarPass" alignment="BOTTOM_LEFT" editable="false" layoutX="439.0" layoutY="629.0" prefHeight="50.0" prefWidth="600.0" />
-                              <Label layoutX="438.0" layoutY="634.0" text="Dirección de correo electrónico:">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <Button fx:id="btnSiguiente" layoutX="439.0" layoutY="695.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="600.0" text="Siguiente">
+                              <Button fx:id="btnSiguiente" layoutX="436.0" layoutY="632.0" mnemonicParsing="false" onAction="#abrirPopupCambiarContrasena" prefHeight="44.0" prefWidth="600.0" text="Siguiente">
                                  <font>
                                     <Font name="Microsoft New Tai Lue Bold" size="14.0" />
                                  </font>
@@ -291,8 +285,7 @@
                                     <Image url="@../../../imagenes/volver-atras.png" />
                                  </image>
                               </ImageView>
-                              <Label layoutX="438.0" layoutY="587.0" text="Para restablecer su contraseña, por favor, introduzca su dirección de correo electrónico." />
-                              <Label layoutX="436.0" layoutY="604.0" text=" A continuación, revise su correo y siga las instrucciones indicadas." />
+                              <Label layoutX="438.0" layoutY="587.0" text="Para restablecer su contraseña, por favor, pulse en el botón siguiente y siga los pasos que se indican." />
                            </children>
                            <stylesheets>
                               <URL value="@../../../style/estilo_app.css" />
