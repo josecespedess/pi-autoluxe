@@ -14,7 +14,7 @@ public class ControladorInicio
 {
     @FXML
     private Label btnCorreo;
-    private String correoUsuario = "";
+    private String correoUsuario;
     @FXML
     private AnchorPane contenedor;
     @FXML
@@ -144,7 +144,9 @@ public class ControladorInicio
         }
     }
     public void setCorreoUsuario(String correo) {
+        System.out.println(correo);
         this.correoUsuario = correo;
         this.btnCorreo.setText(correo);
+        System.out.println(correoUsuario);
     }
 }
