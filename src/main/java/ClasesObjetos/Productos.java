@@ -8,9 +8,17 @@ public class Productos
     private float precio;
     private String almacen;
     private String URLfoto;
-    public Productos(int numReferencia, String descripcion, int cantidad, float precio, String almacen, String URLfoto)
-    {
+
+    public Productos(int numReferencia, String descripcion, int cantidad, float precio, String almacen, String URLfoto) {
         this.numReferencia = numReferencia;
+        this.descripcion = descripcion;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.almacen = almacen;
+        this.URLfoto = URLfoto;
+    }
+
+    public Productos(String descripcion, int cantidad, float precio, String almacen, String URLfoto) {
         this.descripcion = descripcion;
         this.cantidad = cantidad;
         this.precio = precio;

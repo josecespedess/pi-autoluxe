@@ -1,6 +1,8 @@
 package com.example.autoluxe;
 
+import ClasesObjetos.BDautoluxe;
 import ClasesObjetos.Productos;
+import ClasesObjetos.Vehiculos;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -16,6 +19,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ControladorServicios implements Initializable {
@@ -49,34 +54,76 @@ public class ControladorServicios implements Initializable {
     @FXML
     private Label btnCorreo;
     private String correoUsuario;
+    private String[] almacenes = {"Almacen 1", "Almacen 2", "Almacen 3"};
 
     @FXML
-    private ListView<Productos> listViewProductos;
+    private TableColumn<Productos, String> colAlmacen;
 
-    private ObservableList<Productos> productos;
+    @FXML
+    private TableColumn<Productos, Integer> colCantidad;
+
+    @FXML
+    private TableColumn<Productos, String> colDescripcion;
+
+    @FXML
+    private TableColumn<Productos, Integer> colNReferencia;
+
+    @FXML
+    private TableColumn<Productos, Float> colPrecio;
+
+    @FXML
+    private TableView<Productos> tableStock;
+
+    private List<Productos> productos;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
-        productos = FXCollections.observableArrayList();
-        listViewProductos.setItems(productos);
-        cbAlmacen.setItems(FXCollections.observableArrayList("Almacen 1", "Almacen 2", "Almacen 3"));
+        try {
+            BDautoluxe.conectar();
+            //Aplicamos la lista al ChoiceBox
+            cbAlmacen.getItems().addAll(almacenes);
+            cbAlmacen.getSelectionModel().selectFirst();
+
+            establecerProductos();
+            iniciarColumnas();
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Método para inicializar las columnas
+    private void iniciarColumnas() {
+        colNReferencia.setCellValueFactory(new PropertyValueFactory<Productos, Integer>("numReferencia"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory<Productos, String>("descripcion"));
+        colCantidad.setCellValueFactory(new PropertyValueFactory<Productos, Integer>("cantidad"));
+        colPrecio.setCellValueFactory(new PropertyValueFactory<Productos, Float>("precio"));
+        colAlmacen.setCellValueFactory(new PropertyValueFactory<Productos, String>("almacen"));
+    }
+
+    private void establecerProductos() {
+        tableStock.getItems().clear();
+        List<Productos> listaProductos = BDautoluxe.listadoProductosBD();
+        tableStock.setItems((ObservableList<Productos>) listaProductos);
     }
 
     @FXML
     private void agregarProducto() {
-        String referencia = tfNReferencia.getText();
         int cantidad = Integer.parseInt(tfCantidad.getText());
         String descripcion = tfDescripcion.getText();
         String almacen = cbAlmacen.getValue();
         float precio = Float.parseFloat(tfPrecio.getText());
 
-        if (referencia.isEmpty() || descripcion.isEmpty() || almacen == null || tfCantidad.getText().isEmpty() || tfPrecio.getText().isEmpty()) {
+        if (descripcion.isEmpty() || almacen == null || tfCantidad.getText().isEmpty() || tfPrecio.getText().isEmpty()) {
             mostrarAlerta("Error", "Todos los campos son obligatorios");
             return;
         }
 
-        Productos producto = new Productos(Integer.parseInt(referencia),descripcion,cantidad,precio,almacen,"");
+        Productos producto = new Productos(descripcion, cantidad, precio, almacen,"");
         productos.add(producto);
         limpiarCampos();
     }

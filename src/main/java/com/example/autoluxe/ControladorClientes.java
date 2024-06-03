@@ -744,11 +744,11 @@ public class ControladorClientes implements Initializable {
             e.printStackTrace();
         }
     }
+
     //Método para borrar Clientes
     @FXML
     public void borrarCliente() throws ClassNotFoundException {
-        try
-        {
+        try {
             BDautoluxe.borrarClienteBD(tfDNI2.getText());
             tfNombre2.clear();
             tfApellidos2.clear();
@@ -768,17 +768,15 @@ public class ControladorClientes implements Initializable {
             tfBuscarDNI.clear();
 
             establecerClientes();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //Método para borrar Vehiculo
     @FXML
     public void borrarVehiculo() throws ClassNotFoundException {
-        try
-        {
+        try {
             BDautoluxe.borrarVehiculoBD(tfBuscarMatricula.getText());
             tfMatricula2.clear();
             tfBastidor2.clear();
@@ -800,12 +798,11 @@ public class ControladorClientes implements Initializable {
             tfBuscarMatricula.clear();
 
             establecerVehiculos();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //Método para actualizar las tablas
     @FXML
     public void actualizarTablas() throws SQLException, ClassNotFoundException {
@@ -815,6 +812,7 @@ public class ControladorClientes implements Initializable {
         tablaCliente.getItems().clear();
         tablaVehiculo.getItems().clear();
     }
+
     //Método para inicializar las columnas y que se vean
     private void iniciarColumnas() {
         colDNI.setCellValueFactory(new PropertyValueFactory<Clientes, String>("DNI"));
@@ -859,6 +857,7 @@ public class ControladorClientes implements Initializable {
         colColor2.setCellValueFactory(new PropertyValueFactory<Vehiculos,String>("color"));
         colCombustible2.setCellValueFactory(new PropertyValueFactory<Vehiculos,String>("combustible"));
     }
+
     @FXML
     private void cerrarVentana() {
         try {
@@ -874,38 +873,39 @@ public class ControladorClientes implements Initializable {
             e.printStackTrace();
         }
     }
+
     @FXML
-    private void abrirAñadirCliente()
-    {
+    private void abrirAñadirCliente() {
         panelCuerpo.setVisible(true);
         panelCuerpo1.setVisible(false);
         panelCuerpo2.setVisible(false);
         panelCuerpo3.setVisible(false);
     }
+
     @FXML
-    private void abrirEditarCliente()
-    {
+    private void abrirEditarCliente() {
         panelCuerpo.setVisible(false);
         panelCuerpo1.setVisible(true);
         panelCuerpo2.setVisible(false);
         panelCuerpo3.setVisible(false);
     }
+
     @FXML
-    private void abrirAñadirVehiculo()
-    {
+    private void abrirAñadirVehiculo() {
         panelCuerpo.setVisible(false);
         panelCuerpo1.setVisible(false);
         panelCuerpo2.setVisible(true);
         panelCuerpo3.setVisible(false);
     }
+
     @FXML
-    private void abrirEditarVehiculo()
-    {
+    private void abrirEditarVehiculo() {
         panelCuerpo.setVisible(false);
         panelCuerpo1.setVisible(false);
         panelCuerpo2.setVisible(false);
         panelCuerpo3.setVisible(true);
     }
+
     /*
     MENU 8/8
      */

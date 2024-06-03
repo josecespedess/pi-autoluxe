@@ -1210,14 +1210,33 @@ public class BDautoluxe {
     // -----------------------------------------------------------------------------------------------------------------
     // PRODUCTOS
     // -----------------------------------------------------------------------------------------------------------------
+
+    // Método añadir producto a la base de datos
+    public static void altaProductoBD(Productos producto) {
+        try {
+            PreparedStatement st = connection.prepareStatement("INSERT INTO productos (descripcion, precio, cantidad, almacen, URLfoto) VALUES (?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+            st.setString(1, producto.getDescripcion());
+            st.setDouble(2, producto.getPrecio());
+            st.setInt(3, producto.getCantidad());
+            st.setString(4, producto.getAlmacen());
+            st.setString(5, producto.getURLfoto());
+
+            st.executeUpdate();
+
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Producto añadido.", "");
+
+            st.close(); // Cerrar la declaración después de su uso
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     //Método mostrar Productos
-    public static List<Productos> listadoProductosBD()
-    {
+    public static List<Productos> listadoProductosBD() {
         List<Productos> listaProductos = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM productos");
 
             rs=st.executeQuery();
@@ -1231,21 +1250,18 @@ public class BDautoluxe {
                 Productos producto = new Productos(numReferencia, descripcion, cantidad, precio, almacen,URLfoto);
                 listaProductos.add(producto);
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return listaProductos;
     }
-    //Método para obtener un Empleado[DNI]
-    public static Productos obtenerProductoID(String busqueda)
-    {
+
+    //Método para obtener un producto[DNI]
+    public static Productos obtenerProductoID(String busqueda) {
         Productos p = null;
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM productos WHERE numReferencia="+busqueda);
             rs=st.executeQuery();
             while (rs.next()) {
@@ -1258,24 +1274,21 @@ public class BDautoluxe {
                 Productos producto = new Productos(numReferencia, descripcion, cantidad, precio, almacen,URLfoto);
                 p=producto;
             }
-        }
-        catch (SQLException i)
-        {
+        } catch (SQLException i) {
             i.printStackTrace();
         }
         return p;
     }
+
     // -----------------------------------------------------------------------------------------------------------------
     // SERVICIOS
     // -----------------------------------------------------------------------------------------------------------------
     //Método mostrar SERVICIOS
-    public static List<Servicios> listadoServiciosBD()
-    {
+    public static List<Servicios> listadoServiciosBD() {
         List<Servicios> listaServicios = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM servicios");
 
             rs=st.executeQuery();
@@ -1288,21 +1301,18 @@ public class BDautoluxe {
                 Servicios servicios = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
                 listaServicios.add(servicios);
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return listaServicios;
     }
+
     //Método para obtener un Empleado[DNI]
-    public static Servicios obtenerServicioID(String busqueda)
-    {
+    public static Servicios obtenerServicioID(String busqueda) {
         Servicios s = null;
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM servicios WHERE idServicio="+busqueda);
             rs=st.executeQuery();
             while (rs.next()) {
@@ -1314,9 +1324,7 @@ public class BDautoluxe {
                 Servicios servicio = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
                 s=servicio;
             }
-        }
-        catch (SQLException i)
-        {
+        } catch (SQLException i) {
             i.printStackTrace();
         }
         return s;
