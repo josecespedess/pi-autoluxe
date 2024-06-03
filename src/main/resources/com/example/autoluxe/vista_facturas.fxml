@@ -276,7 +276,7 @@
                               </Label>
                               <ComboBox fx:id="cbServicio" layoutX="261.0" layoutY="386.0" prefHeight="25.0" prefWidth="155.0" promptText="Seleccione producto" />
                               <TextField fx:id="tfBuscarServicio" layoutX="449.0" layoutY="385.0" prefHeight="31.0" prefWidth="135.0" promptText="Buscar producto" />
-                              <Button fx:id="btnBuscar211" layoutX="584.0" layoutY="385.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="31.0" style="-fx-background-color: #000000;">
+                              <Button fx:id="btnBuscar211" layoutX="584.0" layoutY="385.0" mnemonicParsing="false" onAction="#buscarServicio" prefHeight="31.0" prefWidth="31.0" style="-fx-background-color: #000000;">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>

@@ -1307,4 +1307,60 @@ public class BDautoluxe
         return p;
     }
     // -----------------------------------------------------------------------------------------------------------------
+    // SERVICIOS
+    // -----------------------------------------------------------------------------------------------------------------
+    //Método mostrar SERVICIOS
+    public static List<Servicios> listadoServiciosBD()
+    {
+        List<Servicios> listaServicios = FXCollections.observableArrayList();
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try
+        {
+            st=connection.prepareStatement("SELECT * FROM servicios");
+
+            rs=st.executeQuery();
+            while (rs.next()) {
+                int idServicio = rs.getInt("idServicio");
+                String descripcion = rs.getString("descripcion");
+                float precio = rs.getFloat("precio");
+                String fecha = rs.getString("fecha");
+                String idVehiculo = rs.getString("idVehiculo");
+                Servicios servicios = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
+                listaServicios.add(servicios);
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return listaServicios;
+    }
+    //Método para obtener un Empleado[DNI]
+    public static Servicios obtenerServicioID(String busqueda)
+    {
+        Servicios s = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try
+        {
+            st=connection.prepareStatement("SELECT * FROM servicios WHERE idServicio="+busqueda);
+            rs=st.executeQuery();
+            while (rs.next()) {
+                int idServicio = rs.getInt("idServicio");
+                String descripcion = rs.getString("descripcion");
+                float precio = rs.getFloat("precio");
+                String fecha = rs.getString("fecha");
+                String idVehiculo = rs.getString("idVehiculo");
+                Servicios servicio = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
+                s=servicio;
+            }
+        }
+        catch (SQLException i)
+        {
+            i.printStackTrace();
+        }
+        return s;
+    }
+    // -----------------------------------------------------------------------------------------------------------------
 }
