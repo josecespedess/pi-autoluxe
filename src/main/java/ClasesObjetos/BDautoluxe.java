@@ -7,8 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.*;
 import java.util.List;
 
-public class BDautoluxe
-{
+public class BDautoluxe {
     // -----------------------------------------------------------------------------------------------------------------
     // CONEXIÓN Y DESCONEXIÓN CON LA BASE DE DATOS
     // -----------------------------------------------------------------------------------------------------------------
@@ -18,19 +17,16 @@ public class BDautoluxe
     public static Connection connection=null;
 
     //Método para conectar con la base de datos
-    public static void conectar() throws SQLException, ClassNotFoundException
-    {
-        if (connection == null || connection.isClosed())
-        {
+    public static void conectar() throws SQLException, ClassNotFoundException {
+        if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(url, user, password);
             System.out.println("BD conectada");
         }
     }
+
     //Método para desconectar de la base de datos
-    public static void desconectar() throws SQLException
-    {
-        if (connection != null && !connection.isClosed())
-        {
+    public static void desconectar() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
             connection.close();
             System.out.println("BD desconectada");
         }
@@ -45,8 +41,7 @@ public class BDautoluxe
     // EMPLEADOS
     // -----------------------------------------------------------------------------------------------------------------
     //Método añadir empleados a la base de datos
-    public static void altaEmpleadoBD(@NotNull Empleados empleado)
-    {
+    public static void altaEmpleadoBD(@NotNull Empleados empleado) {
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement("INSERT INTO empleados (DNI, nombre, apellidos, telefono, rol, correo, contraseña) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -62,9 +57,7 @@ public class BDautoluxe
             st.executeUpdate();
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Empleado añadido.", "");
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             mostrarAlerta(Alert.AlertType.WARNING, "DNI existente", "");
         }
     }
@@ -167,14 +160,55 @@ public class BDautoluxe
         }
     }
 
+    // Método para que un empleado pueda modificar sus datos desde su perfil
+    public static void actualizarEmpleadoBD2(@NotNull Empleados empleado) {
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement("UPDATE empleados SET nombre = ?, apellidos = ?, telefono = ?, correo = ? WHERE DNI = ?");
+
+            st.setString(1, empleado.getNombre());
+            st.setString(2, empleado.getApellidos());
+            st.setString(3, empleado.getTelefono());
+            st.setString(4, empleado.getCorreo());
+            st.setString(5, empleado.getDNI());
+
+            st.executeUpdate();
+
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Empleado actualizado.", "Los datos del empleado han sido actualizados correctamente.");
+        } catch (SQLException e) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Error al actualizar el empleado.", "No se pudo actualizar los datos del empleado.");
+            e.printStackTrace();
+        } finally {
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void actualizarContrasena(Empleados empleado) {
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement("UPDATE empleados SET contraseña = ? WHERE DNI = ?");
+            st.setString(1, empleado.getContrasena());
+            st.setString(2, empleado.getDNI());
+
+            st.executeUpdate();
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Contraseña actualizada.", "La contraseña ha sido actualizada correctamente.");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     //Método mostrar Empleados
-    public static List<Empleados> listadoEmpleadosBD()
-    {
+    public static List<Empleados> listadoEmpleadosBD() {
         List<Empleados> listaEmpleados = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM empleados");
 
             rs=st.executeQuery();
@@ -189,24 +223,19 @@ public class BDautoluxe
                 Empleados empleado = new Empleados(DNI, nombre, apellidos,telefono,rol,correo,contrasena);
                 listaEmpleados.add(empleado);
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return listaEmpleados;
     }
 
     //Método mostrar Empleados segun la opcion
-    public static List<Empleados> listadoEmpleadosBD(String opcion, String busqueda)
-    {
+    public static List<Empleados> listadoEmpleadosBD(String opcion, String busqueda) {
         List<Empleados> listaEmpleados = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        if(opcion=="Nombre")
-        {
-            try
-            {
+        if(opcion=="Nombre") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM empleados WHERE nombre='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -221,16 +250,11 @@ public class BDautoluxe
                     Empleados empleado = new Empleados(DNI, nombre, apellidos,telefono,rol,correo,contrasena);
                     listaEmpleados.add(empleado);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="Apellidos")
-        {
-            try
-            {
+        } else if(opcion=="Apellidos") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM empleados WHERE apellidos='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -245,16 +269,11 @@ public class BDautoluxe
                     Empleados empleado = new Empleados(DNI, nombre, apellidos,telefono,rol,correo,contrasena);
                     listaEmpleados.add(empleado);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="Rol")
-        {
-            try
-            {
+        } else if(opcion=="Rol") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM empleados WHERE rol='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -269,16 +288,11 @@ public class BDautoluxe
                     Empleados empleado = new Empleados(DNI, nombre, apellidos,telefono,rol,correo,contrasena);
                     listaEmpleados.add(empleado);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="DNI")
-        {
-            try
-            {
+        } else if(opcion=="DNI") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM empleados WHERE DNI='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -293,8 +307,7 @@ public class BDautoluxe
                     Empleados empleado = new Empleados(DNI, nombre, apellidos,telefono,rol,correo,contrasena);
                     listaEmpleados.add(empleado);
                 }
-            }
-            catch (SQLException e)
+            } catch (SQLException e)
             {
                 e.printStackTrace();
             }
@@ -303,13 +316,11 @@ public class BDautoluxe
     }
 
     //Método para obtener un Empleado[DNI]
-    public static Empleados obtenerEmpleadoDNI(String busqueda)
-    {
+    public static Empleados obtenerEmpleadoDNI(String busqueda) {
         Empleados e = null;
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM empleados WHERE DNI='"+busqueda+"'");
 
             rs=st.executeQuery();
@@ -322,11 +333,35 @@ public class BDautoluxe
                 String correo = rs.getString("correo");
                 String contrasena = rs.getString("contraseña");
                 e = new Empleados(DNI, nombre, apellidos,telefono,rol,correo,contrasena);
-                
+
             }
+        } catch (SQLException i) {
+            i.printStackTrace();
         }
-        catch (SQLException i)
-        {
+        return e;
+    }
+
+    //Método para obtener un Empleado[Correo]
+    public static Empleados obtenerEmpleadoCorreo(String email) {
+        Empleados e = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st=connection.prepareStatement("SELECT * FROM empleados WHERE correo='"+email+"'");
+
+            rs=st.executeQuery();
+            while (rs.next()) {
+                String DNI = rs.getString("DNI");
+                String nombre = rs.getString("nombre");
+                String apellidos = rs.getString("apellidos");
+                String rol = rs.getString("rol");
+                String telefono = rs.getString("telefono");
+                String correo = rs.getString("correo");
+                String contrasena = rs.getString("contraseña");
+                e = new Empleados(DNI, nombre, apellidos,telefono,rol,correo,contrasena);
+
+            }
+        } catch (SQLException i) {
             i.printStackTrace();
         }
         return e;
@@ -348,7 +383,6 @@ public class BDautoluxe
             st = connection.prepareStatement(query);
             st.setString(1, busqueda);
             st.executeUpdate();
-
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Empleado eliminado", "El empleado ha sido eliminado correctamente.");
         } catch (SQLException e) {
@@ -463,13 +497,11 @@ public class BDautoluxe
     }
 
     //Método mostrar Clientes
-    public static List<Clientes> listadoClientesBD()
-    {
+    public static List<Clientes> listadoClientesBD() {
         List<Clientes> listaClientes = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM clientes");
 
             rs=st.executeQuery();
@@ -482,23 +514,18 @@ public class BDautoluxe
                 Clientes cliente = new Clientes(DNI, nombre, apellidos, telefono, correo);
                 listaClientes.add(cliente);
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return listaClientes;
     }
     //Método mostrar Empleados segun la opcion
-    public static List<Clientes> listadoClientesBD(String opcion, String busqueda)
-    {
+    public static List<Clientes> listadoClientesBD(String opcion, String busqueda) {
         List<Clientes> listaClientes = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        if(opcion=="Nombre")
-        {
-            try
-            {
+        if(opcion=="Nombre") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM clientes WHERE nombre='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -511,16 +538,11 @@ public class BDautoluxe
                     Clientes cliente = new Clientes(DNI, nombre, apellidos,telefono,correo);
                     listaClientes.add(cliente);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="Apellidos")
-        {
-            try
-            {
+        } else if(opcion=="Apellidos") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM clientes WHERE apellidos='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -533,16 +555,11 @@ public class BDautoluxe
                     Clientes cliente = new Clientes(DNI, nombre, apellidos,telefono,correo);
                     listaClientes.add(cliente);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="DNI")
-        {
-            try
-            {
+        } else if(opcion=="DNI") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM clientes WHERE DNI='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -555,14 +572,13 @@ public class BDautoluxe
                     Clientes cliente = new Clientes(DNI, nombre, apellidos,telefono,correo);
                     listaClientes.add(cliente);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         return listaClientes;
     }
+
     // Método para verificar si un DNI ya existe en la base de datos
     public static boolean dniExisteCliente(String dni) {
         PreparedStatement st = null;
@@ -631,13 +647,11 @@ public class BDautoluxe
         return false;
     }
     //Método para obtener un Empleado[DNI]
-    public static Clientes obtenerClienteDNI(String busqueda)
-    {
+    public static Clientes obtenerClienteDNI(String busqueda) {
         Clientes c = null;
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM clientes WHERE DNI='"+busqueda+"'");
 
             rs=st.executeQuery();
@@ -649,9 +663,7 @@ public class BDautoluxe
                 String correo = rs.getString("correo");
                 c = new Clientes(DNI, nombre, apellidos,telefono,correo);
             }
-        }
-        catch (SQLException i)
-        {
+        } catch (SQLException i) {
             i.printStackTrace();
         }
         return c;
@@ -689,13 +701,11 @@ public class BDautoluxe
         }
     }
     //Método mostrar Todos los Vehiculos
-    public static List<Vehiculos> listadoVehiculosBD()
-    {
+    public static List<Vehiculos> listadoVehiculosBD() {
         List<Vehiculos> listaVehiculos = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM vehiculos");
 
             rs=st.executeQuery();
@@ -710,23 +720,19 @@ public class BDautoluxe
                 Vehiculos vehiculo = new Vehiculos(matricula,bastidor,marca,modelo,combustible,color,DNI_Cliente);
                 listaVehiculos.add(vehiculo);
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return listaVehiculos;
     }
+
     //Método mostrar Empleados segun la opcion
-    public static List<Vehiculos> listadoVehiculosBD(String opcion, String busqueda)
-    {
+    public static List<Vehiculos> listadoVehiculosBD(String opcion, String busqueda) {
         List<Vehiculos> listaVehiculos = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        if(opcion=="Matrícula")
-        {
-            try
-            {
+        if(opcion=="Matrícula") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM vehiculos WHERE matricula='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -741,16 +747,11 @@ public class BDautoluxe
                     Vehiculos vehiculo = new Vehiculos(matricula,bastidor,marca,modelo,combustible,color,DNI_Cliente);
                     listaVehiculos.add(vehiculo);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="NumBastidor")
-        {
-            try
-            {
+        } else if(opcion=="NumBastidor") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM vehiculos WHERE numBastidor='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -765,16 +766,11 @@ public class BDautoluxe
                     Vehiculos vehiculo = new Vehiculos(matricula,bastidor,marca,modelo,combustible,color,DNI_Cliente);
                     listaVehiculos.add(vehiculo);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="Marca")
-        {
-            try
-            {
+        } else if(opcion=="Marca") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM vehiculos WHERE marca='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -789,16 +785,11 @@ public class BDautoluxe
                     Vehiculos vehiculo = new Vehiculos(matricula,bastidor,marca,modelo,combustible,color,DNI_Cliente);
                     listaVehiculos.add(vehiculo);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="Color")
-        {
-            try
-            {
+        } else if(opcion=="Color") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM vehiculos WHERE color='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -813,22 +804,19 @@ public class BDautoluxe
                     Vehiculos vehiculo = new Vehiculos(matricula,bastidor,marca,modelo,combustible,color,DNI_Cliente);
                     listaVehiculos.add(vehiculo);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         return listaVehiculos;
     }
+
     //Método para obtener el DNI del propietario de un Vehiculo
-    public static String obtenerDNIVehiculo(String busqueda)
-    {
+    public static String obtenerDNIVehiculo(String busqueda) {
         String dni = null;
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM vehiculos WHERE matricula='"+busqueda+"'");
 
             rs=st.executeQuery();
@@ -836,13 +824,12 @@ public class BDautoluxe
                 String DNI = rs.getString("DNI_cliente");
                 dni = DNI;
             }
-        }
-        catch (SQLException i)
-        {
+        } catch (SQLException i) {
             i.printStackTrace();
         }
         return dni;
     }
+
     // Método para editar un vehiculo en la base de datos
     public static void actualizarVehiculoBD(Vehiculos vehiculo) {
         PreparedStatement st = null;
@@ -904,13 +891,11 @@ public class BDautoluxe
         }
     }
     //Método para obtener el Vehiculo mediante la matrícula
-    public static Vehiculos obtenerVehiculoMatricula(String busqueda)
-    {
+    public static Vehiculos obtenerVehiculoMatricula(String busqueda) {
         Vehiculos v = null;
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM vehiculos WHERE matricula='"+busqueda+"'");
 
             rs=st.executeQuery();
@@ -924,13 +909,12 @@ public class BDautoluxe
                 Vehiculos vehiculo = new Vehiculos(busqueda,bastidor,marca,modelo,combustible,color,DNI_Cliente);
                 v=vehiculo;
             }
-        }
-        catch (SQLException i)
-        {
+        } catch (SQLException i) {
             i.printStackTrace();
         }
         return v;
     }
+
     // Método para verificar si una Matrícula ya existe en la base de datos
     public static boolean matriculaExisteVehiculo(String matricula) {
         PreparedStatement st = null;
@@ -969,8 +953,7 @@ public class BDautoluxe
     // ELEVADORES
     // -----------------------------------------------------------------------------------------------------------------
     //Método saber el estado de los elevadores
-    public static String estadoElevador(int id)
-    {
+    public static String estadoElevador(int id) {
         String e="";
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -986,8 +969,8 @@ public class BDautoluxe
         }
         return e;
     }
-    public static void establecerEstado(int id,String estado)
-    {
+
+    public static void establecerEstado(int id,String estado) {
         PreparedStatement st = null;
         try {
             String query = "UPDATE elevador SET estado=? WHERE idElevador=?";
@@ -995,14 +978,12 @@ public class BDautoluxe
             st.setString(1, estado);
             st.setInt(2, id);
             st.executeUpdate();
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    public static void establecerDatos(int id,String matricula,String dni)
-    {
+
+    public static void establecerDatos(int id,String matricula,String dni) {
         PreparedStatement st = null;
         try {
             String query = "UPDATE elevador SET idVehiculo=?,idEmpleado=? WHERE idElevador=?";
@@ -1011,15 +992,13 @@ public class BDautoluxe
             st.setString(2, dni);
             st.setInt(3, id);
             st.executeUpdate();
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     //Método saber el vehiculo de cada elevador
-    public static String vehiculoElevador(int id)
-    {
+    public static String vehiculoElevador(int id) {
         String v="";
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -1035,8 +1014,8 @@ public class BDautoluxe
         }
         return v;
     }
-    public static String empleadoElevador(int id)
-    {
+
+    public static String empleadoElevador(int id) {
         String e="";
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -1052,17 +1031,16 @@ public class BDautoluxe
         }
         return e;
     }
+
     // -----------------------------------------------------------------------------------------------------------------
     // TAREAS
     // -----------------------------------------------------------------------------------------------------------------
     // Método para listar tareas
-    public static List<Tareas> listadoTareasBD()
-    {
+    public static List<Tareas> listadoTareasBD() {
         List<Tareas> listaTareas = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM tareas");
 
             rs=st.executeQuery();
@@ -1074,23 +1052,19 @@ public class BDautoluxe
                 Tareas tarea = new Tareas(idTarea,idEmpleado,asunto,descripcion);
                 listaTareas.add(tarea);
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return listaTareas;
     }
+
     //Método mostrar Tareas segun la opcion
-    public static List<Tareas> listadoTareasBD(String opcion, String busqueda)
-    {
+    public static List<Tareas> listadoTareasBD(String opcion, String busqueda) {
         List<Tareas> listaTareas = FXCollections.observableArrayList();
         PreparedStatement st = null;
         ResultSet rs = null;
-        if(opcion=="ID Tarea")
-        {
-            try
-            {
+        if(opcion=="ID Tarea") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM tareas WHERE idTarea='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -1102,16 +1076,11 @@ public class BDautoluxe
                     Tareas tarea = new Tareas(idTarea,idEmpleado,asunto,descripcion);
                     listaTareas.add(tarea);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="ID Empleado")
-        {
-            try
-            {
+        } else if(opcion=="ID Empleado") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM tareas WHERE idEmpleado='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -1123,16 +1092,11 @@ public class BDautoluxe
                     Tareas tarea = new Tareas(idTarea,idEmpleado,asunto,descripcion);
                     listaTareas.add(tarea);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if(opcion=="Asunto")
-        {
-            try
-            {
+        } else if(opcion=="Asunto") {
+            try {
                 st=connection.prepareStatement("SELECT * FROM tareas WHERE asunto='"+busqueda+"'");
 
                 rs=st.executeQuery();
@@ -1144,17 +1108,15 @@ public class BDautoluxe
                     Tareas tarea = new Tareas(idTarea,idEmpleado,asunto,descripcion);
                     listaTareas.add(tarea);
                 }
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         return listaTareas;
     }
+
     //Método añadir tareas a la base de datos
-    public static void altaTareaBD(@NotNull Tareas tarea)
-    {
+    public static void altaTareaBD(@NotNull Tareas tarea) {
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement("INSERT INTO tareas (idEmpleado, asunto, descripcion) VALUES (?, ?, ?)");
@@ -1166,12 +1128,11 @@ public class BDautoluxe
             st.executeUpdate();
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Tarea añadida.", "");
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     // Método para actualizar un empleado
     public static void actualizarTareaBD(@NotNull Tareas tarea) {
         PreparedStatement st = null;
@@ -1198,14 +1159,13 @@ public class BDautoluxe
             }
         }
     }
+
     //Método para obtener un Empleado[DNI]
-    public static Tareas obtenerTareaID(String busqueda)
-    {
+    public static Tareas obtenerTareaID(String busqueda) {
         Tareas t = null;
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             st=connection.prepareStatement("SELECT * FROM tareas WHERE idTarea='"+busqueda+"'");
 
             rs=st.executeQuery();
@@ -1218,13 +1178,12 @@ public class BDautoluxe
                 t=tarea;
 
             }
-        }
-        catch (SQLException i)
-        {
+        } catch (SQLException i) {
             i.printStackTrace();
         }
         return t;
     }
+
     // Método para eliminar un vehiculo de la base de datos
     public static void borrarTareaBD(String idTarea) {
         PreparedStatement st = null;
@@ -1247,120 +1206,6 @@ public class BDautoluxe
                 }
             }
         }
-    }
-    // -----------------------------------------------------------------------------------------------------------------
-    // PRODUCTOS
-    // -----------------------------------------------------------------------------------------------------------------
-    //Método mostrar Productos
-    public static List<Productos> listadoProductosBD()
-    {
-        List<Productos> listaProductos = FXCollections.observableArrayList();
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try
-        {
-            st=connection.prepareStatement("SELECT * FROM productos");
-
-            rs=st.executeQuery();
-            while (rs.next()) {
-                int numReferencia = rs.getInt("numReferencia");
-                String descripcion = rs.getString("descripcion");
-                int cantidad = rs.getInt("cantidad");
-                float precio = rs.getFloat("precio");
-                String almacen = rs.getString("almacen");
-                String URLfoto = rs.getString("URLfoto");
-                Productos producto = new Productos(numReferencia, descripcion, cantidad, precio, almacen,URLfoto);
-                listaProductos.add(producto);
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return listaProductos;
-    }
-    //Método para obtener un Empleado[DNI]
-    public static Productos obtenerProductoID(String busqueda)
-    {
-        Productos p = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try
-        {
-            st=connection.prepareStatement("SELECT * FROM productos WHERE numReferencia="+busqueda);
-            rs=st.executeQuery();
-            while (rs.next()) {
-                int numReferencia = rs.getInt("numReferencia");
-                String descripcion = rs.getString("descripcion");
-                int cantidad = rs.getInt("cantidad");
-                float precio = rs.getFloat("precio");
-                String almacen = rs.getString("almacen");
-                String URLfoto = rs.getString("URLfoto");
-                Productos producto = new Productos(numReferencia, descripcion, cantidad, precio, almacen,URLfoto);
-                p=producto;
-            }
-        }
-        catch (SQLException i)
-        {
-            i.printStackTrace();
-        }
-        return p;
-    }
-    // -----------------------------------------------------------------------------------------------------------------
-    // SERVICIOS
-    // -----------------------------------------------------------------------------------------------------------------
-    //Método mostrar SERVICIOS
-    public static List<Servicios> listadoServiciosBD()
-    {
-        List<Servicios> listaServicios = FXCollections.observableArrayList();
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try
-        {
-            st=connection.prepareStatement("SELECT * FROM servicios");
-
-            rs=st.executeQuery();
-            while (rs.next()) {
-                int idServicio = rs.getInt("idServicio");
-                String descripcion = rs.getString("descripcion");
-                float precio = rs.getFloat("precio");
-                String fecha = rs.getString("fecha");
-                String idVehiculo = rs.getString("idVehiculo");
-                Servicios servicios = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
-                listaServicios.add(servicios);
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return listaServicios;
-    }
-    //Método para obtener un Empleado[DNI]
-    public static Servicios obtenerServicioID(String busqueda)
-    {
-        Servicios s = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try
-        {
-            st=connection.prepareStatement("SELECT * FROM servicios WHERE idServicio="+busqueda);
-            rs=st.executeQuery();
-            while (rs.next()) {
-                int idServicio = rs.getInt("idServicio");
-                String descripcion = rs.getString("descripcion");
-                float precio = rs.getFloat("precio");
-                String fecha = rs.getString("fecha");
-                String idVehiculo = rs.getString("idVehiculo");
-                Servicios servicio = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
-                s=servicio;
-            }
-        }
-        catch (SQLException i)
-        {
-            i.printStackTrace();
-        }
-        return s;
     }
     // -----------------------------------------------------------------------------------------------------------------
 }
