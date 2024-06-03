@@ -1,20 +1,15 @@
 package com.example.autoluxe;
 
-import ClasesObjetos.BDautoluxe;
-import ClasesObjetos.Clientes;
-import ClasesObjetos.Empleados;
-import ClasesObjetos.Productos;
+import ClasesObjetos.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -41,25 +36,38 @@ public class ControladorFacturas
     private TextField tfBuscarProducto;
     @FXML
     private ComboBox cbProducto;
+    @FXML
+    private TextField tfBuscarServicio;
+    @FXML
+    private ComboBox cbServicio;
+    @FXML
+    private Spinner<Integer> cantidadProducto;
+    @FXML
+    private Spinner<Integer> cantidadServicio;
+    SpinnerValueFactory<Integer> vf=new SpinnerValueFactory.IntegerSpinnerValueFactory(1,100,1);
     //Tabla de los productos/servicios que se añaden a la factura
     @FXML
     public static TableView<?> tablaFactura;
     @FXML
-    private TableColumn<?, String> colDescripcion;
+    private TableColumn<ProductosServiciosFacturas, String> colDescripcion;
     @FXML
-    private TableColumn<?, Integer> colCantidad;
+    private TableColumn<ProductosServiciosFacturas, Integer> colCantidad;
     @FXML
-    private TableColumn<?, Float> colPrecioU;
+    private TableColumn<ProductosServiciosFacturas, Float> colPrecioU;
     @FXML
-    private TableColumn<?, Float> colPrecioT;
+    private TableColumn<ProductosServiciosFacturas, Float> colPrecioT;
     @FXML
-    private TableColumn<?, Button> colBorrar;
+    private TableColumn<ProductosServiciosFacturas, Button> colBorrar;
     public void initialize() throws SQLException, ClassNotFoundException {
         BDautoluxe.conectar();
         dpFechaActual.setValue(LocalDate.now());
         establecerDNIClientes();
         establecerDNIEmpleados();
         establecerIDProductos();
+        establecerIDServicios();
+        cantidadProducto.setValueFactory(vf);
+        cantidadServicio.setValueFactory(vf);
+        iniciarColumnas();
     }
     // Establecer los DNIs en el ChoiceBox Clientes
     public void establecerDNIClientes() throws SQLException, ClassNotFoundException {
@@ -87,6 +95,20 @@ public class ControladorFacturas
             listaIDs.add(String.valueOf(producto.getNumReferencia()));
         }
         cbProducto.setItems(listaIDs);
+    }
+    // Establecer los IDs en el ChoiceBox Servicios
+    public void establecerIDServicios() throws SQLException, ClassNotFoundException {
+        ObservableList<Servicios> listado = (ObservableList<Servicios>) BDautoluxe.listadoServiciosBD();
+        ObservableList<String> listaIDs = FXCollections.observableArrayList();
+        for (Servicios servicios : listado) {
+            listaIDs.add(String.valueOf(servicios.getIdServico()));
+        }
+        cbServicio.setItems(listaIDs);
+    }
+    @FXML
+    public void anadirProducto()
+    {
+
     }
     //Método para buscar Cliente
     @FXML
@@ -166,6 +188,32 @@ public class ControladorFacturas
             e.printStackTrace();
         }
     }
+    //Método para buscar Producto
+    @FXML
+    public void buscarServicio() throws  ClassNotFoundException {
+        try
+        {
+            Servicios servicio= BDautoluxe.obtenerServicioID(tfBuscarServicio.getText());
+            if(servicio==null)
+            {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Diálogo de Alerta");
+                alert.setHeaderText("ID no existente");
+                alert.showAndWait();
+                tfBuscarServicio.setText("");
+                cbServicio.setValue("Seleccione producto");
+            }
+            else
+            {
+                cbServicio.setValue(servicio.getIdServico());
+            }
+            limpiarCampos();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     private void mostrarAlerta(Alert.AlertType tipo, String encabezado) {
         mostrarAlerta(tipo, encabezado, null);
     }
@@ -178,7 +226,7 @@ public class ControladorFacturas
         alert.showAndWait();
     }
     private void limpiarCampos() {
-        TextField[] campos = {tfBuscarCliente,tfBuscarEmpleado,tfBuscarProducto};
+        TextField[] campos = {tfBuscarCliente,tfBuscarEmpleado,tfBuscarProducto,tfBuscarServicio};
         for (TextField campo : campos) {
             campo.clear();
         }
@@ -192,6 +240,14 @@ public class ControladorFacturas
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    //Método para inicializar las columnas y que se vean
+    private void iniciarColumnas() {
+        colDescripcion.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas, String>("descripcion"));
+        colCantidad.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas, Integer>("cantidad"));
+        colPrecioU.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas, Float>("precioU"));
+        colPrecioT.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas,Float>("precioT"));
+        colBorrar.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas, Button>("borrar"));
     }
     /*
     MENU 8/8
