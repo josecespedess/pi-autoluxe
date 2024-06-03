@@ -54,12 +54,12 @@ CREATE TABLE elevador (
 
 -- Crear la tabla 'productos'
 CREATE TABLE productos (
-  numReferencia VARCHAR(15) PRIMARY KEY,
+  numReferencia INT AUTO_INCREMENT PRIMARY KEY,
   descripcion VARCHAR(50),
   precio FLOAT,
   cantidad INT,
   almacen VARCHAR(25),
-  URLfoto VARCHAR(300)
+  URLfoto VARCHAR(600)
 );
 
 -- Crear la tabla 'servicios'

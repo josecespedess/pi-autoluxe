@@ -210,8 +210,8 @@
                                     <Font name="Microsoft New Tai Lue Bold" size="14.0" />
                                  </font>
                               </Button>
-                              <TextField layoutX="449.0" layoutY="173.0" prefHeight="31.0" prefWidth="135.0" promptText="Buscar cliente" />
-                              <Button fx:id="btnBuscar" layoutX="584.0" layoutY="173.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="31.0" style="-fx-background-color: #000000;">
+                              <TextField fx:id="tfBuscarCliente" layoutX="449.0" layoutY="173.0" prefHeight="31.0" prefWidth="135.0" promptText="Buscar cliente" />
+                              <Button fx:id="btnBuscar" layoutX="584.0" layoutY="173.0" mnemonicParsing="false" onAction="#buscarCliente" prefHeight="31.0" prefWidth="31.0" style="-fx-background-color: #000000;">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
@@ -229,11 +229,11 @@
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
                               </Label>
-                              <ComboBox layoutX="261.0" layoutY="176.0" prefHeight="25.0" prefWidth="155.0" promptText="Seleccione cliente" />
-                              <ComboBox layoutX="261.0" layoutY="246.0" prefHeight="25.0" prefWidth="155.0" promptText="Seleccione empleado" />
-                              <ComboBox layoutX="261.0" layoutY="316.0" prefHeight="25.0" prefWidth="155.0" promptText="Seleccione producto" />
-                              <TextField layoutX="449.0" layoutY="243.0" prefHeight="31.0" prefWidth="135.0" promptText="Buscar empleado" />
-                              <Button fx:id="btnBuscar2" layoutX="584.0" layoutY="243.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="31.0" style="-fx-background-color: #000000;">
+                              <ComboBox fx:id="cbCliente" layoutX="261.0" layoutY="176.0" prefHeight="25.0" prefWidth="155.0" promptText="Seleccione cliente" />
+                              <ComboBox fx:id="cbEmpleado" layoutX="261.0" layoutY="246.0" prefHeight="25.0" prefWidth="155.0" promptText="Seleccione empleado" />
+                              <ComboBox fx:id="cbProducto" layoutX="261.0" layoutY="316.0" prefHeight="25.0" prefWidth="155.0" promptText="Seleccione producto" />
+                              <TextField fx:id="tfBuscarEmpleado" layoutX="449.0" layoutY="243.0" prefHeight="31.0" prefWidth="135.0" promptText="Buscar empleado" />
+                              <Button fx:id="btnBuscar2" layoutX="584.0" layoutY="243.0" mnemonicParsing="false" onAction="#buscarEmpleado" prefHeight="31.0" prefWidth="31.0" style="-fx-background-color: #000000;">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
@@ -245,8 +245,8 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <TextField layoutX="449.0" layoutY="314.0" prefHeight="31.0" prefWidth="135.0" promptText="Buscar producto" />
-                              <Button fx:id="btnBuscar21" layoutX="584.0" layoutY="314.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="31.0" style="-fx-background-color: #000000;">
+                              <TextField fx:id="tfBuscarProducto" layoutX="449.0" layoutY="314.0" prefHeight="31.0" prefWidth="135.0" promptText="Buscar producto" />
+                              <Button fx:id="btnBuscar21" layoutX="584.0" layoutY="314.0" mnemonicParsing="false" onAction="#buscarProducto" prefHeight="31.0" prefWidth="31.0" style="-fx-background-color: #000000;">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
@@ -258,7 +258,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Spinner layoutX="719.0" layoutY="316.0" prefHeight="25.0" prefWidth="91.0" />
+                              <Spinner fx:id="cantidadProducto" layoutX="719.0" layoutY="316.0" prefHeight="25.0" prefWidth="91.0" />
                               <Label layoutX="644.0" layoutY="321.0" text="Cantidad:">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
@@ -274,8 +274,8 @@
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
                               </Label>
-                              <ComboBox layoutX="261.0" layoutY="386.0" prefHeight="25.0" prefWidth="155.0" promptText="Seleccione producto" />
-                              <TextField layoutX="449.0" layoutY="385.0" prefHeight="31.0" prefWidth="135.0" promptText="Buscar producto" />
+                              <ComboBox fx:id="cbServicio" layoutX="261.0" layoutY="386.0" prefHeight="25.0" prefWidth="155.0" promptText="Seleccione producto" />
+                              <TextField fx:id="tfBuscarServicio" layoutX="449.0" layoutY="385.0" prefHeight="31.0" prefWidth="135.0" promptText="Buscar producto" />
                               <Button fx:id="btnBuscar211" layoutX="584.0" layoutY="385.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="31.0" style="-fx-background-color: #000000;">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
@@ -288,7 +288,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Spinner layoutX="719.0" layoutY="388.0" prefHeight="25.0" prefWidth="91.0" />
+                              <Spinner fx:id="cantidadServicio" layoutX="719.0" layoutY="388.0" prefHeight="25.0" prefWidth="91.0" />
                               <Label layoutX="644.0" layoutY="391.0" text="Cantidad:">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
@@ -299,7 +299,7 @@
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
                               </Label>
-                              <DatePicker layoutX="836.0" layoutY="176.0" prefHeight="25.0" prefWidth="156.0" />
+                              <DatePicker fx:id="dpFechaActual" disable="true" layoutX="836.0" layoutY="176.0" prefHeight="25.0" prefWidth="156.0" />
                               <Pane layoutX="136.0" layoutY="471.0" prefHeight="211.0" prefWidth="850.0" style="-fx-background-color: fff; -fx-border-color: #000000;">
                                  <children>
                                     <Label alignment="CENTER" layoutX="241.0" layoutY="14.0" prefHeight="31.0" prefWidth="348.0" text="DETALLES DE FACTURACIÓN" textAlignment="CENTER">

@@ -1,17 +1,23 @@
 package com.example.autoluxe;
 
+import ClasesObjetos.BDautoluxe;
+import ClasesObjetos.Clientes;
+import ClasesObjetos.Empleados;
+import ClasesObjetos.Productos;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class ControladorFacturas
 {
@@ -21,6 +27,20 @@ public class ControladorFacturas
     private ImageView btnCerrarSesion;
     @FXML
     public static TextField tfTotalPagar;
+    @FXML
+    private DatePicker dpFechaActual;
+    @FXML
+    private TextField tfBuscarCliente;
+    @FXML
+    private ComboBox cbCliente;
+    @FXML
+    private TextField tfBuscarEmpleado;
+    @FXML
+    private ComboBox cbEmpleado;
+    @FXML
+    private TextField tfBuscarProducto;
+    @FXML
+    private ComboBox cbProducto;
     //Tabla de los productos/servicios que se añaden a la factura
     @FXML
     public static TableView<?> tablaFactura;
@@ -34,6 +54,135 @@ public class ControladorFacturas
     private TableColumn<?, Float> colPrecioT;
     @FXML
     private TableColumn<?, Button> colBorrar;
+    public void initialize() throws SQLException, ClassNotFoundException {
+        BDautoluxe.conectar();
+        dpFechaActual.setValue(LocalDate.now());
+        establecerDNIClientes();
+        establecerDNIEmpleados();
+        establecerIDProductos();
+    }
+    // Establecer los DNIs en el ChoiceBox Clientes
+    public void establecerDNIClientes() throws SQLException, ClassNotFoundException {
+        ObservableList<Clientes> listado = (ObservableList<Clientes>) BDautoluxe.listadoClientesBD();
+        ObservableList<String> listaDNIs = FXCollections.observableArrayList();
+        for (Clientes cliente : listado) {
+            listaDNIs.add(cliente.getDNI());
+        }
+        cbCliente.setItems(listaDNIs);
+    }
+    // Establecer los DNIs en el ChoiceBox Empleados
+    public void establecerDNIEmpleados() throws SQLException, ClassNotFoundException {
+        ObservableList<Empleados> listado = (ObservableList<Empleados>) BDautoluxe.listadoEmpleadosBD();
+        ObservableList<String> listaDNIs = FXCollections.observableArrayList();
+        for (Empleados empleado : listado) {
+            listaDNIs.add(empleado.getDNI());
+        }
+        cbEmpleado.setItems(listaDNIs);
+    }
+    // Establecer los IDs en el ChoiceBox Productos
+    public void establecerIDProductos() throws SQLException, ClassNotFoundException {
+        ObservableList<Productos> listado = (ObservableList<Productos>) BDautoluxe.listadoProductosBD();
+        ObservableList<String> listaIDs = FXCollections.observableArrayList();
+        for (Productos producto : listado) {
+            listaIDs.add(String.valueOf(producto.getNumReferencia()));
+        }
+        cbProducto.setItems(listaIDs);
+    }
+    //Método para buscar Cliente
+    @FXML
+    public void buscarCliente() throws  ClassNotFoundException {
+        try
+        {
+            Clientes cliente= BDautoluxe.obtenerClienteDNI(tfBuscarCliente.getText());
+            if(cliente==null)
+            {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Diálogo de Alerta");
+                alert.setHeaderText("DNI no existente");
+                alert.showAndWait();
+                tfBuscarCliente.setText("");
+                cbCliente.setValue("Seleccione cliente");
+            }
+            else
+            {
+                cbCliente.setValue(cliente.getDNI());
+            }
+            limpiarCampos();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    //Método para buscar Empleado
+    @FXML
+    public void buscarEmpleado() throws  ClassNotFoundException {
+        try
+        {
+            Empleados empleado= BDautoluxe.obtenerEmpleadoDNI(tfBuscarEmpleado.getText());
+            if(empleado==null)
+            {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Diálogo de Alerta");
+                alert.setHeaderText("DNI no existente");
+                alert.showAndWait();
+                tfBuscarEmpleado.setText("");
+                cbEmpleado.setValue("Seleccione empleado");
+            }
+            else
+            {
+                cbEmpleado.setValue(empleado.getDNI());
+            }
+            limpiarCampos();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    //Método para buscar Producto
+    @FXML
+    public void buscarProducto() throws  ClassNotFoundException {
+        try
+        {
+            Productos producto= BDautoluxe.obtenerProductoID(tfBuscarProducto.getText());
+            if(producto==null)
+            {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Diálogo de Alerta");
+                alert.setHeaderText("ID no existente");
+                alert.showAndWait();
+                tfBuscarProducto.setText("");
+                cbProducto.setValue("Seleccione producto");
+            }
+            else
+            {
+                cbProducto.setValue(producto.getNumReferencia());
+            }
+            limpiarCampos();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    private void mostrarAlerta(Alert.AlertType tipo, String encabezado) {
+        mostrarAlerta(tipo, encabezado, null);
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String encabezado, String contenido) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle("Diálogo de Alerta");
+        alert.setHeaderText(encabezado);
+        alert.setContentText(contenido);
+        alert.showAndWait();
+    }
+    private void limpiarCampos() {
+        TextField[] campos = {tfBuscarCliente,tfBuscarEmpleado,tfBuscarProducto};
+        for (TextField campo : campos) {
+            campo.clear();
+        }
+    }
     @FXML
     private void cerrarVentana() {
         try {
