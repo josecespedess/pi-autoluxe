@@ -23,6 +23,9 @@ import java.util.List;
 public class ControladorTareas
 {
     @FXML
+    private Label btnCorreo;
+    private String correoUsuario = "";
+    @FXML
     private AnchorPane contenedor;
     @FXML
     private ImageView btnCerrarSesion;
@@ -500,5 +503,9 @@ public class ControladorTareas
         {
             e.printStackTrace();
         }
+    }
+    public void setCorreoUsuario(String correo) {
+        this.correoUsuario = correo;
+        this.btnCorreo.setText(correo);
     }
 }

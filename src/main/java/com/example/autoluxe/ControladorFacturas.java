@@ -17,6 +17,9 @@ import java.time.LocalDate;
 public class ControladorFacturas
 {
     @FXML
+    private Label btnCorreo;
+    private String correoUsuario = "";
+    @FXML
     private AnchorPane contenedor;
     @FXML
     private ImageView btnCerrarSesion;
@@ -360,5 +363,9 @@ public class ControladorFacturas
         {
             e.printStackTrace();
         }
+    }
+    public void setCorreoUsuario(String correo) {
+        this.correoUsuario = correo;
+        this.btnCorreo.setText(correo);
     }
 }

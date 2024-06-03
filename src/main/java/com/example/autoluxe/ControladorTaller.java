@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -23,6 +24,9 @@ import java.util.ResourceBundle;
 
 public class ControladorTaller  implements Initializable
 {
+    @FXML
+    private Label btnCorreo;
+    private String correoUsuario = "";
     @FXML
     private AnchorPane contenedor;
     @FXML
@@ -514,5 +518,9 @@ public class ControladorTaller  implements Initializable
         {
             e.printStackTrace();
         }
+    }
+    public void setCorreoUsuario(String correo) {
+        this.correoUsuario = correo;
+        this.btnCorreo.setText(correo);
     }
 }

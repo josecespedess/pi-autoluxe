@@ -22,6 +22,9 @@ import java.util.ResourceBundle;
 
 public class ControladorClientes implements Initializable {
     @FXML
+    private Label btnCorreo;
+    private String correoUsuario = "";
+    @FXML
     private AnchorPane contenedor;
     @FXML
     private ImageView btnCerrarSesion;
@@ -1007,5 +1010,9 @@ public class ControladorClientes implements Initializable {
         {
             e.printStackTrace();
         }
+    }
+    public void setCorreoUsuario(String correo) {
+        this.correoUsuario = correo;
+        this.btnCorreo.setText(correo);
     }
 }

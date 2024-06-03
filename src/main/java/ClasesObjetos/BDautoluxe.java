@@ -1208,4 +1208,118 @@ public class BDautoluxe {
         }
     }
     // -----------------------------------------------------------------------------------------------------------------
+    // PRODUCTOS
+    // -----------------------------------------------------------------------------------------------------------------
+    //Método mostrar Productos
+    public static List<Productos> listadoProductosBD()
+    {
+        List<Productos> listaProductos = FXCollections.observableArrayList();
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try
+        {
+            st=connection.prepareStatement("SELECT * FROM productos");
+
+            rs=st.executeQuery();
+            while (rs.next()) {
+                int numReferencia = rs.getInt("numReferencia");
+                String descripcion = rs.getString("descripcion");
+                int cantidad = rs.getInt("cantidad");
+                float precio = rs.getFloat("precio");
+                String almacen = rs.getString("almacen");
+                String URLfoto = rs.getString("URLfoto");
+                Productos producto = new Productos(numReferencia, descripcion, cantidad, precio, almacen,URLfoto);
+                listaProductos.add(producto);
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return listaProductos;
+    }
+    //Método para obtener un Empleado[DNI]
+    public static Productos obtenerProductoID(String busqueda)
+    {
+        Productos p = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try
+        {
+            st=connection.prepareStatement("SELECT * FROM productos WHERE numReferencia="+busqueda);
+            rs=st.executeQuery();
+            while (rs.next()) {
+                int numReferencia = rs.getInt("numReferencia");
+                String descripcion = rs.getString("descripcion");
+                int cantidad = rs.getInt("cantidad");
+                float precio = rs.getFloat("precio");
+                String almacen = rs.getString("almacen");
+                String URLfoto = rs.getString("URLfoto");
+                Productos producto = new Productos(numReferencia, descripcion, cantidad, precio, almacen,URLfoto);
+                p=producto;
+            }
+        }
+        catch (SQLException i)
+        {
+            i.printStackTrace();
+        }
+        return p;
+    }
+    // -----------------------------------------------------------------------------------------------------------------
+    // SERVICIOS
+    // -----------------------------------------------------------------------------------------------------------------
+    //Método mostrar SERVICIOS
+    public static List<Servicios> listadoServiciosBD()
+    {
+        List<Servicios> listaServicios = FXCollections.observableArrayList();
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try
+        {
+            st=connection.prepareStatement("SELECT * FROM servicios");
+
+            rs=st.executeQuery();
+            while (rs.next()) {
+                int idServicio = rs.getInt("idServicio");
+                String descripcion = rs.getString("descripcion");
+                float precio = rs.getFloat("precio");
+                String fecha = rs.getString("fecha");
+                String idVehiculo = rs.getString("idVehiculo");
+                Servicios servicios = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
+                listaServicios.add(servicios);
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return listaServicios;
+    }
+    //Método para obtener un Empleado[DNI]
+    public static Servicios obtenerServicioID(String busqueda)
+    {
+        Servicios s = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try
+        {
+            st=connection.prepareStatement("SELECT * FROM servicios WHERE idServicio="+busqueda);
+            rs=st.executeQuery();
+            while (rs.next()) {
+                int idServicio = rs.getInt("idServicio");
+                String descripcion = rs.getString("descripcion");
+                float precio = rs.getFloat("precio");
+                String fecha = rs.getString("fecha");
+                String idVehiculo = rs.getString("idVehiculo");
+                Servicios servicio = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
+                s=servicio;
+            }
+        }
+        catch (SQLException i)
+        {
+            i.printStackTrace();
+        }
+        return s;
+    }
+    // -----------------------------------------------------------------------------------------------------------------
 }

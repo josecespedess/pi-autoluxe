@@ -1,7 +1,6 @@
 package com.example.autoluxe;
 
 import ClasesObjetos.Productos;
-import com.example.ProductoCeldaController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -52,13 +51,11 @@ public class ControladorServicios implements Initializable {
     private ObservableList<Productos> productos;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-//        productos = FXCollections.observableArrayList();
-//        listViewProductos.setItems(productos);
-//
-//        listViewProductos.setCellFactory(param -> new ProductoCeldaController());
-//
-//        cbAlmacen.setItems(FXCollections.observableArrayList("Almacen 1", "Almacen 2", "Almacen 3"));
+    public void initialize(URL url, ResourceBundle resourceBundle)
+    {
+        productos = FXCollections.observableArrayList();
+        listViewProductos.setItems(productos);
+        cbAlmacen.setItems(FXCollections.observableArrayList("Almacen 1", "Almacen 2", "Almacen 3"));
     }
 
     @FXML
@@ -67,14 +64,14 @@ public class ControladorServicios implements Initializable {
         int cantidad = Integer.parseInt(tfCantidad.getText());
         String descripcion = tfDescripcion.getText();
         String almacen = cbAlmacen.getValue();
-        double precio = Double.parseDouble(tfPrecio.getText());
+        float precio = Float.parseFloat(tfPrecio.getText());
 
         if (referencia.isEmpty() || descripcion.isEmpty() || almacen == null || tfCantidad.getText().isEmpty() || tfPrecio.getText().isEmpty()) {
             mostrarAlerta("Error", "Todos los campos son obligatorios");
             return;
         }
 
-        Productos producto = new Productos(referencia, cantidad, descripcion, almacen, precio);
+        Productos producto = new Productos(Integer.parseInt(referencia),descripcion,cantidad,precio,almacen,"");
         productos.add(producto);
         limpiarCampos();
     }

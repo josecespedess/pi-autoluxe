@@ -3,12 +3,16 @@ package com.example.autoluxe;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 public class ControladorInicio
 {
+    @FXML
+    private Label btnCorreo;
+    private String correoUsuario = "";
     @FXML
     private AnchorPane contenedor;
     @FXML
@@ -138,5 +142,9 @@ public class ControladorInicio
         {
             e.printStackTrace();
         }
+    }
+    public void setCorreoUsuario(String correo) {
+        this.correoUsuario = correo;
+        this.btnCorreo.setText(correo);
     }
 }

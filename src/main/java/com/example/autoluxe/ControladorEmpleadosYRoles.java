@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ControladorEmpleadosYRoles  {
+    @FXML
+    private Label btnCorreo;
+    private String correoUsuario = "";
     //Clase de la base de datos
     BDautoluxe bd = new BDautoluxe();
     //Paneles
@@ -546,5 +549,9 @@ public class ControladorEmpleadosYRoles  {
         {
             e.printStackTrace();
         }
+    }
+    public void setCorreoUsuario(String correo) {
+        this.correoUsuario = correo;
+        this.btnCorreo.setText(correo);
     }
 }
