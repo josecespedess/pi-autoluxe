@@ -29,6 +29,7 @@ public class ControladorFacturas
     private ImageView btnCerrarSesion;
     @FXML
     public TextField precioTotalPagar;
+    public static TextField precioTotalPagar1;
     @FXML
     public TextField precioSubtotal;
     @FXML
@@ -66,6 +67,7 @@ public class ControladorFacturas
     //Tabla de los productos/servicios que se añaden a la factura
     @FXML
     private TableView<ProductosServiciosFacturas> tablaFactura;
+    private static TableView<ProductosServiciosFacturas> tablaFactura1;
     @FXML
     private TableColumn<ProductosServiciosFacturas, String> colDescripcion;
     @FXML
@@ -87,6 +89,8 @@ public class ControladorFacturas
         cantidadServicio.setValueFactory(vf2);
         estblecerDatosFactura();
         iniciarColumnas();
+        tablaFactura1=tablaFactura;
+        precioTotalPagar1=precioTotalPagar;
     }
     // Establecer los DNIs en el ChoiceBox Clientes
     public void establecerDNIClientes() throws SQLException, ClassNotFoundException {
@@ -127,13 +131,17 @@ public class ControladorFacturas
     @FXML
     public void generarfactura()
     {
-        if((cbCliente.getValue()=="Seleccione cliente"||cbCliente.getValue()==null||cbCliente.getValue()=="")||(cbEmpleado.getValue()=="Seleccione empleado"||cbEmpleado.getValue()==null||cbEmpleado.getValue()=="")||(tablaFactura.getItems()==null))
+        if((cbCliente.getValue()=="Seleccione cliente"||cbCliente.getValue()==null||cbCliente.getValue()=="")||(cbEmpleado.getValue()=="Seleccione empleado"||cbEmpleado.getValue()==null||cbEmpleado.getValue()=="")||tablaFactura.getItems().isEmpty())
         {
             mostrarAlerta(Alert.AlertType.WARNING,"Error al generar facturar.");
+            estblecerDatosFactura();
         }
         else
         {
-
+            ventaPDF ventaPDF = new ventaPDF();
+            ventaPDF.DatosCliente(cbCliente.getValue().toString());
+            ventaPDF.DatosEmpleado(cbEmpleado.getValue().toString());
+            ventaPDF.generarFactura();
         }
     }
     public void estblecerDatosFactura()
@@ -368,8 +376,8 @@ public class ControladorFacturas
         colBorrar.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas, Button>("borrar"));
         tablaFactura.setItems(FXCollections.observableArrayList());
     }
-    public TableView<ProductosServiciosFacturas> getTablaFacturas() {return tablaFactura;}
-    public String getTotalAPagar() {return precioTotalPagar.getText();}
+    public static TableView<ProductosServiciosFacturas> getTablaFacturas() {return tablaFactura1;}
+    public static String getTotalAPagar() {return precioTotalPagar1.getText();}
     /*
     MENU 8/8
      */

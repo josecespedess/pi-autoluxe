@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class ventaPDF
 {
@@ -48,26 +49,20 @@ public class ventaPDF
         try {
             //Establecer fecha actual
             Date date = new Date();
-            fechaActual = new SimpleDateFormat("yyyy/MM/dd").format(date);
-            //Cambiar el formato de la fecha de / a _
-            String fechaFormateada = "";
-            for (int i = 0; i < fechaActual.length(); i++) {
-                if (fechaFormateada.charAt(i) == '/') {
-                    fechaFormateada = fechaActual.replace("/", "_");
-                }
-            }
+            fechaActual = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
             //Establecer nombre de la factura
-            nombreArchivoPDF = "Factura_" + nombreCliente + "_" + fechaFormateada + ".pdf";
+            nombreArchivoPDF = "Factura_" + nombreCliente + "_" + fechaActual + ".pdf";
             //Guardar las facturas
             FileOutputStream archivo;
-            File file = new File("src/facturas_pdf/" + nombreArchivoPDF);
+            File file = new File("C:/Users/Public/Documents/"+nombreArchivoPDF);
             archivo = new FileOutputStream(file);
             //Generar un nuevo documento
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
             //ENCABEZADO
-            Image img = Image.getInstance("src/main/resources/imagenes/LogoAutoLuxe.png");
+            Image img = Image.getInstance(Objects.requireNonNull(getClass().getResource("/imagenes/LogoAutoLuxe.png")));
             Paragraph fecha = new Paragraph();
             Font negrita = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.BLUE);
             fecha.add(Chunk.NEWLINE);
@@ -131,10 +126,10 @@ public class ventaPDF
             PdfPCell empleado2 = new PdfPCell(new Phrase("CORREO:", negrita));
             empleado1.setBorder(0);
             empleado2.setBorder(0);
-            tablaCliente.addCell(empleado1);
-            tablaCliente.addCell(empleado2);
-            tablaCliente.addCell(nombreEmpleado);
-            tablaCliente.addCell(correoEmpleado);
+            tablaEmpleado.addCell(empleado1);
+            tablaEmpleado.addCell(empleado2);
+            tablaEmpleado.addCell(nombreEmpleado);
+            tablaEmpleado.addCell(correoEmpleado);
             doc.add(tablaEmpleado);
             //ESPACIO EN BLANCO
             doc.add(espacio);
@@ -161,9 +156,8 @@ public class ventaPDF
             tablaProducto.addCell(producto2);
             tablaProducto.addCell(producto3);
             tablaProducto.addCell(producto4);
-            ControladorFacturas controladorFacturas=new ControladorFacturas();
-            ObservableList<ProductosServiciosFacturas> datos= (ObservableList<ProductosServiciosFacturas>) controladorFacturas.getTablaFacturas().getItems();
-            for (int i = 0; i < controladorFacturas.getTablaFacturas().getItems().size(); i++)
+            ObservableList<ProductosServiciosFacturas> datos= (ObservableList<ProductosServiciosFacturas>) ControladorFacturas.getTablaFacturas().getItems();
+            for (int i = 0; i < ControladorFacturas.getTablaFacturas().getItems().size(); i++)
             {
                 String descripcion=datos.get(i).getDescripcion();
                 int cantidad=datos.get(i).getCantidad();
@@ -181,7 +175,7 @@ public class ventaPDF
             //Información del total a pagar
             Paragraph info=new Paragraph();
             info.add(Chunk.NEWLINE);
-            info.add("Total a pagar: " + controladorFacturas.getTotalAPagar());
+            info.add("Total a pagar: " + ControladorFacturas.getTotalAPagar());
             info.setAlignment(Element.ALIGN_RIGHT);
             doc.add(info);
 

@@ -355,7 +355,7 @@
                                     </Button>
                                  </children>
                               </Pane>
-                              <Button fx:id="acFacturar" layoutX="635.0" layoutY="698.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="350.0" text="GENERAR FACTURA">
+                              <Button fx:id="acFacturar" layoutX="635.0" layoutY="698.0" mnemonicParsing="false" onAction="#generarfactura" prefHeight="51.0" prefWidth="350.0" text="GENERAR FACTURA">
                                  <font>
                                     <Font name="Microsoft New Tai Lue Bold" size="14.0" />
                                  </font>
