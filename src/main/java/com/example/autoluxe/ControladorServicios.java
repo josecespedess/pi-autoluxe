@@ -7,15 +7,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ControladorServicios implements Initializable {
+    @FXML
+    private Button btnCerrarSesion;
     @FXML
     private AnchorPane contenedor;
 
@@ -105,16 +109,17 @@ public class ControladorServicios implements Initializable {
     }
 
     @FXML
-    private void cerrarVentana()
-    {
-        try
-        {
+    private void cerrarVentana() {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("vista_InicioSesion.fxml"));
             Parent root = loader.load();
+            Stage nuevaVentana = new Stage();
+            nuevaVentana.setTitle("AutoLuxe");
+            nuevaVentana.setScene(new Scene(root,1920,1000));
+            Stage ventanaActual = (Stage) btnCerrarSesion.getScene().getWindow();
+            ventanaActual.close();nuevaVentana.show();
             contenedor.getChildren().setAll(root);
-        }
-        catch (IOException e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -129,8 +134,7 @@ public class ControladorServicios implements Initializable {
             ControladorTareas controlador = loader.getController();
             controlador.setCorreoUsuario(correoUsuario);
             contenedor.getChildren().setAll(root);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -143,8 +147,7 @@ public class ControladorServicios implements Initializable {
             ControladorEmpleadosYRoles controlador = loader.getController();
             controlador.setCorreoUsuario(correoUsuario);
             contenedor.getChildren().setAll(root);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -157,8 +160,7 @@ public class ControladorServicios implements Initializable {
             ControladorInicio controlador = loader.getController();
             controlador.setCorreoUsuario(correoUsuario);
             contenedor.getChildren().setAll(root);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -171,8 +173,7 @@ public class ControladorServicios implements Initializable {
             ControladorClientes controlador = loader.getController();
             controlador.setCorreoUsuario(correoUsuario);
             contenedor.getChildren().setAll(root);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -185,8 +186,7 @@ public class ControladorServicios implements Initializable {
             ControladorFacturas controlador = loader.getController();
             controlador.setCorreoUsuario(correoUsuario);
             contenedor.getChildren().setAll(root);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -212,8 +212,7 @@ public class ControladorServicios implements Initializable {
             ControladorTaller controlador = loader.getController();
             controlador.setCorreoUsuario(correoUsuario);
             contenedor.getChildren().setAll(root);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -226,8 +225,7 @@ public class ControladorServicios implements Initializable {
             ControladorServicios controlador = loader.getController();
             controlador.setCorreoUsuario(correoUsuario);
             contenedor.getChildren().setAll(root);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
