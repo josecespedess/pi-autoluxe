@@ -41,7 +41,7 @@ public class ventaPDF
     {
         Empleados empleado= BDautoluxe.obtenerEmpleadoDNI(dni);
         nombreEmpleado=empleado.getNombre();
-        correoEmpleado=empleado.getDNI();
+        correoEmpleado=empleado.getCorreo();
     }
     //Método para generar la factura de venta
     public void generarFactura()
@@ -81,6 +81,7 @@ public class ventaPDF
             encabezado.addCell("");
             encabezado.addCell("RUC:" + ruc + "\nNOMBRE:" + nombre + "\nTELÉFONO:" + telefono + "\nDIRECCIÓN:" + direccion);
             encabezado.addCell(fecha);
+            doc.add(encabezado);
             //DATOS DEL CLIENTE
             Paragraph cliente = new Paragraph();
             cliente.add(Chunk.NEWLINE);
@@ -166,8 +167,8 @@ public class ventaPDF
 
                 tablaProducto.addCell(String.valueOf(cantidad));
                 tablaProducto.addCell(descripcion);
-                tablaProducto.addCell(String.valueOf(precioU));
-                tablaProducto.addCell(String.valueOf(precioT));
+                tablaProducto.addCell(String.valueOf(precioU)+"€");
+                tablaProducto.addCell(String.valueOf(precioT)+"€");
 
             }
             doc.add(tablaProducto);
@@ -175,7 +176,7 @@ public class ventaPDF
             //Información del total a pagar
             Paragraph info=new Paragraph();
             info.add(Chunk.NEWLINE);
-            info.add("Total a pagar: " + ControladorFacturas.getTotalAPagar());
+            info.add("Total a pagar: " + String.format("%.2f",Float.parseFloat(ControladorFacturas.getTotalAPagar()))+"€");
             info.setAlignment(Element.ALIGN_RIGHT);
             doc.add(info);
 

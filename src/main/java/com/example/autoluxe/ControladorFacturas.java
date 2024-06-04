@@ -181,7 +181,7 @@ public class ControladorFacturas
         }
         else
         {
-            float calculo=parseFloat(precioTotalPagar.getText())*(1+parseFloat(descuento.getText())/100);
+            float calculo=parseFloat(precioTotalPagar.getText())*(1-parseFloat(descuento.getText())/100);
             precioTotalPagar.setText(String.valueOf(calculo));
         }
     }
