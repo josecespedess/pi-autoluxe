@@ -208,7 +208,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Label alignment="CENTER" layoutX="1102.0" layoutY="103.0" prefHeight="47.0" prefWidth="300.0" text="LISTA DE INVENTARIO" textAlignment="CENTER">
+                              <Label alignment="CENTER" layoutX="921.0" layoutY="103.0" prefHeight="47.0" prefWidth="300.0" text="LISTA DE INVENTARIO" textAlignment="CENTER">
                                  <font>
                                     <Font name="Microsoft New Tai Lue Bold" size="24.0" />
                                  </font>
