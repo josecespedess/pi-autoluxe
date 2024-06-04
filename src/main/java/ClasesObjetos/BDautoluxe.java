@@ -1256,7 +1256,7 @@ public class BDautoluxe {
         return listaProductos;
     }
 
-    //Método para obtener un producto[DNI]
+    //Método para obtener un producto[ID]
     public static Productos obtenerProductoID(String busqueda) {
         Productos p = null;
         PreparedStatement st = null;
@@ -1278,6 +1278,50 @@ public class BDautoluxe {
             i.printStackTrace();
         }
         return p;
+    }
+    //Método mostrar Productos segun la opcion
+    public static List<Productos> listadoProductosBD(String opcion, String busqueda) {
+        List<Productos> listaProductos = FXCollections.observableArrayList();
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        if(opcion=="ID") {
+            try {
+                st=connection.prepareStatement("SELECT * FROM productos WHERE numReferencia="+busqueda);
+
+                rs=st.executeQuery();
+                while (rs.next()) {
+                    int numReferencia = rs.getInt("numReferencia");
+                    String descripcion = rs.getString("descripcion");
+                    int cantidad = rs.getInt("cantidad");
+                    float precio = rs.getFloat("precio");
+                    String almacen = rs.getString("almacen");
+                    String URLfoto = rs.getString("URLfoto");
+                    Productos producto = new Productos(numReferencia, descripcion, cantidad, precio, almacen,URLfoto);
+                    listaProductos.add(producto);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if(opcion=="Descripción") {
+            try {
+                st=connection.prepareStatement("SELECT * FROM productos WHERE descripcion='"+busqueda+"'");
+
+                rs=st.executeQuery();
+                while (rs.next()) {
+                    int numReferencia = rs.getInt("numReferencia");
+                    String descripcion = rs.getString("descripcion");
+                    int cantidad = rs.getInt("cantidad");
+                    float precio = rs.getFloat("precio");
+                    String almacen = rs.getString("almacen");
+                    String URLfoto = rs.getString("URLfoto");
+                    Productos producto = new Productos(numReferencia, descripcion, cantidad, precio, almacen,URLfoto);
+                    listaProductos.add(producto);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return listaProductos;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -1307,7 +1351,7 @@ public class BDautoluxe {
         return listaServicios;
     }
 
-    //Método para obtener un Empleado[DNI]
+    //Método para obtener un Servicio[DNI]
     public static Servicios obtenerServicioID(String busqueda) {
         Servicios s = null;
         PreparedStatement st = null;

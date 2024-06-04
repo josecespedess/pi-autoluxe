@@ -1,6 +1,7 @@
 package com.example.autoluxe;
 
 import ClasesObjetos.BDautoluxe;
+import ClasesObjetos.Empleados;
 import ClasesObjetos.Productos;
 import ClasesObjetos.Vehiculos;
 import javafx.collections.FXCollections;
@@ -42,19 +43,19 @@ public class ControladorServicios implements Initializable {
     @FXML
     private TextField tfDescripcion;
 
-    @FXML
-    private TextField tfNReferencia;
 
     @FXML
     private TextField tfPrecio;
 
     @FXML
     private ComboBox<String> cbAlmacen;
+    @FXML
+    private TextField tfBuscar;
 
     @FXML
     private Label btnCorreo;
     private String correoUsuario;
-    private String[] almacenes = {"Almacen 1", "Almacen 2", "Almacen 3"};
+    private String[] almacenes = {"ALM-1", "ALM-2", "ALM-3"};
 
     @FXML
     private TableColumn<Productos, String> colAlmacen;
@@ -72,9 +73,15 @@ public class ControladorServicios implements Initializable {
     private TableColumn<Productos, Float> colPrecio;
 
     @FXML
+    private TableColumn<?,Button> colEditar;
+    @FXML
+    private TableColumn<?,Button> colEliminar;
+    @FXML
     private TableView<Productos> tableStock;
 
-    private List<Productos> productos;
+    @FXML
+    private ComboBox<String> cbOpciones;
+    private String[] opcionesBuscarProducto = {"General","ID", "Descripción"};
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -84,7 +91,9 @@ public class ControladorServicios implements Initializable {
             //Aplicamos la lista al ChoiceBox
             cbAlmacen.getItems().addAll(almacenes);
             cbAlmacen.getSelectionModel().selectFirst();
-
+            //Aplicamos la lista al ChoiceBox
+            cbOpciones.getItems().addAll(opcionesBuscarProducto);
+            cbOpciones.getSelectionModel().selectFirst();
             establecerProductos();
             iniciarColumnas();
 
@@ -93,6 +102,20 @@ public class ControladorServicios implements Initializable {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+    //Método para buscar en la tabla Productos
+    @FXML
+    public void buscarDatosTablaProductos() throws SQLException, ClassNotFoundException {
+        tableStock.getItems().clear();
+        String opcion=cbOpciones.getValue();
+        switch(opcion)
+        {
+            case "General"-> establecerProductos();
+            default ->{
+                List<Productos> listaProductos=BDautoluxe.listadoProductosBD(opcion,tfBuscar.getText());
+                tableStock.setItems((ObservableList<Productos>)listaProductos);
+            }
         }
     }
 
@@ -122,14 +145,22 @@ public class ControladorServicios implements Initializable {
             mostrarAlerta("Error", "Todos los campos son obligatorios");
             return;
         }
+        else
+        {
+            Productos producto = new Productos(descripcion, cantidad, precio, almacen,"");
+            BDautoluxe.altaProductoBD(producto);
+            limpiarCampos();
+            establecerProductos();
+        }
 
-        Productos producto = new Productos(descripcion, cantidad, precio, almacen,"");
-        productos.add(producto);
-        limpiarCampos();
+
     }
-
+    //Método para actualizar las tablas
+    @FXML
+    public void actualizarTablas() throws SQLException, ClassNotFoundException {
+        establecerProductos();
+    }
     private void limpiarCampos() {
-        tfNReferencia.clear();
         tfCantidad.clear();
         tfDescripcion.clear();
         cbAlmacen.setValue(null);
