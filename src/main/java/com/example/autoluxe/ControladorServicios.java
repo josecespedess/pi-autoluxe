@@ -116,6 +116,13 @@ public class ControladorServicios implements Initializable {
     private TextField tfPrecio2;
     @FXML
     private TableView<Servicios> tablaServicios;
+    @FXML
+    private Button btnAnadir2;
+    @FXML
+    private ComboBox<String> cbBuscarServicios;
+    String [] opcionesServicios = {"General", "ID", "Matricula", "Descripcion"};
+    @FXML
+    private TextField tfBuscarServicio;
 
 
     @Override
@@ -129,10 +136,14 @@ public class ControladorServicios implements Initializable {
             //Aplicamos la lista al ChoiceBox
             cbOpciones.getItems().addAll(opcionesBuscarProducto);
             cbOpciones.getSelectionModel().selectFirst();
+
+            cbBuscarServicios.getItems().addAll(opcionesServicios);
+            cbBuscarServicios.getSelectionModel().selectFirst();
+
             establecerProductos();
             iniciarColumnas();
             establecerVehiculos();
-
+            establecerServicios();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -140,17 +151,31 @@ public class ControladorServicios implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
     //Método para buscar en la tabla Productos
     @FXML
     public void buscarDatosTablaProductos() throws SQLException, ClassNotFoundException {
         tableStock.getItems().clear();
-        String opcion=cbOpciones.getValue();
-        switch(opcion)
-        {
+        String opcion = cbOpciones.getValue();
+        switch(opcion) {
             case "General"-> establecerProductos();
-            default ->{
+            default -> {
                 List<Productos> listaProductos=BDautoluxe.listadoProductosBD(opcion,tfBuscar.getText());
                 tableStock.setItems((ObservableList<Productos>)listaProductos);
+            }
+        }
+    }
+
+    //Método para buscar en la tabla Productos
+    @FXML
+    public void buscarDatosTablaServicios() throws SQLException, ClassNotFoundException {
+        tablaServicios.getItems().clear();
+        String opcion = cbBuscarServicios.getValue();
+        switch(opcion) {
+            case "General"-> establecerServicios();
+            default -> {
+                List<Servicios> listaServicios=BDautoluxe.listadoServiciosBD(opcion,tfBuscarServicio.getText());
+                tablaServicios.setItems((ObservableList<Servicios>)listaServicios);
             }
         }
     }
@@ -186,31 +211,60 @@ public class ControladorServicios implements Initializable {
 
     @FXML
     private void agregarProducto() {
-        int cantidad = Integer.parseInt(tfCantidad.getText());
+        // Obtener los valores de los campos
         String descripcion = tfDescripcion.getText();
         String almacen = cbAlmacen.getValue();
-        float precio = Float.parseFloat(tfPrecio.getText());
+        String cantidadText = tfCantidad.getText();
+        String precioText = tfPrecio.getText();
 
-        if (descripcion.isEmpty() || almacen == null || tfCantidad.getText().isEmpty() || tfPrecio.getText().isEmpty()) {
+        // Verificar si alguno de los campos está vacío
+        if (descripcion.isEmpty() || almacen == null || cantidadText.isEmpty() || precioText.isEmpty()) {
+            // Mostrar mensaje de error
             mostrarAlerta("Error", "Todos los campos son obligatorios");
-            return;
-        }
-        else {
-            Productos producto = new Productos(descripcion, cantidad, precio, almacen,"");
-            BDautoluxe.altaProductoBD(producto);
-            limpiarCampos();
-            establecerProductos();
+        } else {
+            try {
+                // Convertir los valores de cantidad y precio a los tipos correspondientes
+                int cantidad = Integer.parseInt(cantidadText);
+                float precio = Float.parseFloat(precioText);
+
+                // Crear el objeto Producto y agregarlo a la base de datos
+                Productos producto = new Productos(descripcion, cantidad, precio, almacen, "");
+                BDautoluxe.altaProductoBD(producto);
+
+                // Limpiar los campos y actualizar la lista de productos
+                limpiarCampos();
+                establecerProductos();
+            } catch (NumberFormatException e) {
+                // Mostrar mensaje de error si la conversión falla (por ejemplo, si el usuario ingresa letras en lugar de números)
+                mostrarAlerta("Error", "Cantidad y precio deben ser números válidos");
+            }
         }
     }
 
     @FXML
     private void agregarServicio() throws SQLException, ClassNotFoundException {
         String descripcion = tfReparacion.getText();
-        String fecha = dpFecha.getValue().toString(); // Usar getValue() en lugar de toString()
-        Float precio = Float.parseFloat(tfPrecio2.getText()); // Convertir el texto a flotante
+        String fecha = dpFecha.getValue() != null ? dpFecha.getValue().toString() : null; // Verificar si la fecha no es nula
+        Float precio = !tfPrecio2.getText().isEmpty() ? Float.parseFloat(tfPrecio2.getText()) : null; // Verificar si el campo de precio no está vacío
         String idVehiculo = tfMatricula2.getText();
+
+        if (descripcion.isEmpty() || fecha == null || precio == null || idVehiculo.isEmpty()) {
+            mostrarAlerta("Error", "Por favor, complete todos los campos.");
+            return; // Salir del método si algún campo está vacío
+        }
+
         Servicios servicio = new Servicios(descripcion, fecha, precio, idVehiculo);
         BDautoluxe.altaServicioBD(servicio);
+
+        tfReparacion.clear();
+        tfMatricula2.clear();
+        dpFecha.setValue(null);
+        tfPrecio2.clear();
+        tfReparacion.setDisable(true);
+        dpFecha.setDisable(true);
+        tfPrecio2.setDisable(true);
+        btnAnadir2.setDisable(true);
+
         establecerServicios();
     }
 
@@ -234,6 +288,7 @@ public class ControladorServicios implements Initializable {
                 tfReparacion.setDisable(false);
                 dpFecha.setDisable(false);
                 tfPrecio2.setDisable(false);
+                btnAnadir2.setDisable(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -250,6 +305,7 @@ public class ControladorServicios implements Initializable {
     @FXML
     public void actualizarTablas() throws SQLException, ClassNotFoundException {
         establecerProductos();
+        establecerServicios();
     }
 
     private void limpiarCampos() {

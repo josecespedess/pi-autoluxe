@@ -23,7 +23,7 @@ public class Servicios
         this.idVehiculo = idVehiculo;
     }
 
-    public int getIdServico() {return idServicio;}
+    public int getIdServicio() {return idServicio;}
     public String getDescripcion() {return descripcion;}
     public float getPrecio() {return precio;}
     public String getFecha() {return fecha;}

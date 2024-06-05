@@ -1338,7 +1338,7 @@ public class BDautoluxe {
 
             st.executeUpdate();
 
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Producto añadido.", "");
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Servicio añadido.", "");
 
             st.close(); // Cerrar la declaración después de su uso
         } catch (SQLException e) {
@@ -1391,6 +1391,67 @@ public class BDautoluxe {
             i.printStackTrace();
         }
         return s;
+    }
+
+    //Método mostrar Empleados segun la opcion
+    public static List<Servicios> listadoServiciosBD(String opcion, String busqueda) {
+        List<Servicios> listaServicios = FXCollections.observableArrayList();
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        if(opcion == "ID") {
+            try {
+                st=connection.prepareStatement("SELECT * FROM servicios WHERE idServicio='"+busqueda+"'");
+
+                rs=st.executeQuery();
+                while (rs.next()) {
+                    int idServicio = rs.getInt("idServicio");
+                    String descripcion = rs.getString("descripcion");
+                    float precio = rs.getFloat("precio");
+                    String fecha = rs.getString("fecha");
+                    String idVehiculo = rs.getString("idVehiculo");
+                    Servicios servicios = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
+                    listaServicios.add(servicios);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if(opcion == "Matricula") {
+            try {
+                st=connection.prepareStatement("SELECT * FROM servicios WHERE idVehiculo='"+busqueda+"'");
+
+                rs=st.executeQuery();
+                while (rs.next()) {
+                    int idServicio = rs.getInt("idServicio");
+                    String descripcion = rs.getString("descripcion");
+                    float precio = rs.getFloat("precio");
+                    String fecha = rs.getString("fecha");
+                    String idVehiculo = rs.getString("idVehiculo");
+                    Servicios servicios = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
+                    listaServicios.add(servicios);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if(opcion == "Descripcion") {
+            try {
+                st = connection.prepareStatement("SELECT * FROM servicios WHERE descripcion LIKE ?");
+                st.setString(1, "%" + busqueda + "%");
+
+                rs=st.executeQuery();
+                while (rs.next()) {
+                    int idServicio = rs.getInt("idServicio");
+                    String descripcion = rs.getString("descripcion");
+                    float precio = rs.getFloat("precio");
+                    String fecha = rs.getString("fecha");
+                    String idVehiculo = rs.getString("idVehiculo");
+                    Servicios servicios = new Servicios(idServicio, descripcion,fecha,precio,idVehiculo);
+                    listaServicios.add(servicios);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return listaServicios;
     }
     // -----------------------------------------------------------------------------------------------------------------
 }

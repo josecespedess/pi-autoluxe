@@ -295,7 +295,7 @@
                               </Button>
                            </children>
                         </Pane>
-                        <Pane fx:id="panelGestorServicios" prefHeight="880.0" prefWidth="1620.0" stylesheets="@../../../style/estilo_app.css">
+                        <Pane fx:id="panelGestorServicios" prefHeight="880.0" prefWidth="1620.0" stylesheets="@../../../style/estilo_app.css" visible="false">
                            <children>
                               <ImageView fitHeight="554.0" fitWidth="759.0" layoutX="139.0" layoutY="107.0" opacity="0.1" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -319,7 +319,7 @@
                                     <Font name="Microsoft New Tai Lue Bold" size="48.0" />
                                  </font>
                               </Label>
-                              <Button fx:id="btnAnadir2" layoutX="135.0" layoutY="522.0" mnemonicParsing="false" onAction="#agregarServicio" prefHeight="44.0" prefWidth="600.0" text="AÑADIR">
+                              <Button fx:id="btnAnadir2" disable="true" layoutX="135.0" layoutY="522.0" mnemonicParsing="false" onAction="#agregarServicio" prefHeight="44.0" prefWidth="600.0" text="AÑADIR">
                                  <font>
                                     <Font name="Microsoft New Tai Lue Bold" size="14.0" />
                                  </font>
@@ -407,8 +407,8 @@
                                     <TableColumn fx:id="colMatriculaServicio2" prefWidth="104.0" text="Matricula" />
                                  </columns>
                               </TableView>
-                              <TextField layoutX="919.0" layoutY="188.0" prefHeight="31.0" prefWidth="285.0" />
-                              <Button fx:id="btnBuscar" layoutX="1204.0" layoutY="188.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="101.0" style="-fx-background-color: #000000;">
+                              <TextField fx:id="tfBuscarServicio" layoutX="919.0" layoutY="188.0" prefHeight="31.0" prefWidth="285.0" />
+                              <Button fx:id="btnBuscar" layoutX="1204.0" layoutY="188.0" mnemonicParsing="false" onAction="#buscarDatosTablaServicios" prefHeight="31.0" prefWidth="101.0" style="-fx-background-color: #000000;">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
@@ -432,7 +432,7 @@
                                     <TableColumn fx:id="colCombustible2" prefWidth="118.0" text="Combustible" />
                                  </columns>
                               </TableView>
-                              <ComboBox layoutX="1403.0" layoutY="189.0" prefHeight="30.0" prefWidth="180.0" />
+                              <ComboBox fx:id="cbBuscarServicios" layoutX="1403.0" layoutY="189.0" prefHeight="30.0" prefWidth="180.0" />
                               <Button layoutX="1331.0" layoutY="186.0" mnemonicParsing="false" onAction="#actualizarTablas" prefHeight="17.0" prefWidth="47.0" style="-fx-background-color: transparent;">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />

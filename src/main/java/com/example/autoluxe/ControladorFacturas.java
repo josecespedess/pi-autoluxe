@@ -124,7 +124,7 @@ public class ControladorFacturas
         ObservableList<Servicios> listado = (ObservableList<Servicios>) BDautoluxe.listadoServiciosBD();
         ObservableList<String> listaIDs = FXCollections.observableArrayList();
         for (Servicios servicios : listado) {
-            listaIDs.add(String.valueOf(servicios.getIdServico()));
+            listaIDs.add(String.valueOf(servicios.getIdServicio()));
         }
         cbServicio.setItems(listaIDs);
     }
@@ -326,7 +326,7 @@ public class ControladorFacturas
             }
             else
             {
-                cbServicio.setValue(servicio.getIdServico());
+                cbServicio.setValue(servicio.getIdServicio());
             }
             limpiarCampos();
         }
