@@ -7,8 +7,15 @@ public class Servicios
     private String fecha; ;
     private float precio;
     private String idVehiculo;
-    public Servicios(int idServicio, String descripcion, String fecha, float precio, String idVehiculo)
-    {
+
+    public Servicios(String descripcion, String fecha, float precio, String idVehiculo) {
+        this.descripcion = descripcion;
+        this.fecha = fecha;
+        this.precio = precio;
+        this.idVehiculo = idVehiculo;
+    }
+
+    public Servicios(int idServicio, String descripcion, String fecha, float precio, String idVehiculo) {
         this.idServicio = idServicio;
         this.descripcion = descripcion;
         this.fecha = fecha;

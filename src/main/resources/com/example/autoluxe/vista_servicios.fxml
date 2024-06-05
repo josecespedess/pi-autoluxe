@@ -313,13 +313,13 @@
                                  </font>
                               </Label>
                               <Line endX="499.0" layoutX="237.0" layoutY="161.0" startX="-100.0" />
-                              <TextField layoutX="136.0" layoutY="203.0" prefHeight="30.0" prefWidth="200.0" />
+                              <TextField fx:id="tfMatricula2" layoutX="136.0" layoutY="203.0" prefHeight="30.0" prefWidth="200.0" />
                               <Label alignment="CENTER" layoutX="178.0" layoutY="55.0" prefHeight="72.0" prefWidth="518.0" text="GESTOR DE SERVICIOS" textAlignment="CENTER">
                                  <font>
                                     <Font name="Microsoft New Tai Lue Bold" size="48.0" />
                                  </font>
                               </Label>
-                              <Button fx:id="btnAnadir2" layoutX="135.0" layoutY="522.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="600.0" text="AÑADIR">
+                              <Button fx:id="btnAnadir2" layoutX="135.0" layoutY="522.0" mnemonicParsing="false" onAction="#agregarServicio" prefHeight="44.0" prefWidth="600.0" text="AÑADIR">
                                  <font>
                                     <Font name="Microsoft New Tai Lue Bold" size="14.0" />
                                  </font>
@@ -380,29 +380,31 @@
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="136.0" layoutY="357.0" prefHeight="30.0" prefWidth="600.0" />
+                              <TextField fx:id="tfReparacion" disable="true" layoutX="136.0" layoutY="357.0" prefHeight="30.0" prefWidth="600.0" />
                               <Label layoutX="137.0" layoutY="412.0" text="Fecha:">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
                               </Label>
-                              <DatePicker layoutX="136.0" layoutY="438.0" prefHeight="30.0" prefWidth="280.0" />
+                              <DatePicker fx:id="dpFecha" disable="true" layoutX="136.0" layoutY="438.0" prefHeight="30.0" prefWidth="280.0" />
                               <Label layoutX="457.0" layoutY="412.0" text="Precio:">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="456.0" layoutY="438.0" prefHeight="30.0" prefWidth="280.0" />
+                              <TextField fx:id="tfPrecio2" disable="true" layoutX="456.0" layoutY="438.0" prefHeight="30.0" prefWidth="280.0" />
                               <Label alignment="CENTER" layoutX="922.0" layoutY="481.0" prefHeight="47.0" prefWidth="280.0" text="LISTADO DE VEHÍCULOS" textAlignment="CENTER">
                                  <font>
                                     <Font name="Microsoft New Tai Lue Bold" size="24.0" />
                                  </font>
                               </Label>
-                              <TableView layoutX="921.0" layoutY="252.0" prefHeight="215.0" prefWidth="662.0">
+                              <TableView fx:id="tablaServicios" layoutX="921.0" layoutY="252.0" prefHeight="215.0" prefWidth="662.0">
                                  <columns>
-                                    <TableColumn prefWidth="214.0" text="A" />
-                                    <TableColumn minWidth="0.0" prefWidth="236.0" text="B" />
-                                    <TableColumn prefWidth="210.0" text="C" />
+                                    <TableColumn fx:id="colIdServicio2" prefWidth="83.0" text="idServicio" />
+                                    <TableColumn fx:id="colDescripcion2" minWidth="0.0" prefWidth="287.0" text="Descripción" />
+                                    <TableColumn fx:id="colPrecio2" prefWidth="84.0" text="Precio" />
+                                    <TableColumn fx:id="colFecha2" prefWidth="103.0" text="Fecha" />
+                                    <TableColumn fx:id="colMatriculaServicio2" prefWidth="104.0" text="Matricula" />
                                  </columns>
                               </TableView>
                               <TextField layoutX="919.0" layoutY="188.0" prefHeight="31.0" prefWidth="285.0" />
@@ -419,11 +421,15 @@
                                  </graphic>
                               </Button>
                               <Line endX="559.0" layoutX="1022.0" layoutY="528.0" startX="-100.0" />
-                              <TableView layoutX="921.0" layoutY="544.0" prefHeight="184.0" prefWidth="662.0">
+                              <TableView fx:id="tablaVehiculosServicios" layoutX="921.0" layoutY="544.0" prefHeight="184.0" prefWidth="662.0">
                                  <columns>
-                                    <TableColumn prefWidth="214.0" text="A" />
-                                    <TableColumn minWidth="0.0" prefWidth="236.0" text="B" />
-                                    <TableColumn prefWidth="210.0" text="C" />
+                                    <TableColumn fx:id="colMatricula2" prefWidth="104.0" text="Matrícula" />
+                                    <TableColumn fx:id="colNBastidor2" minWidth="0.0" prefWidth="83.0" text="NºBastidor" />
+                                    <TableColumn fx:id="colMarca2" prefWidth="94.0" text="Marca" />
+                                    <TableColumn fx:id="colModelo2" prefWidth="93.0" text="Modelo" />
+                                    <TableColumn fx:id="colCliente2" prefWidth="93.0" text="Cliente" />
+                                    <TableColumn fx:id="colColor2" prefWidth="76.0" text="Color" />
+                                    <TableColumn fx:id="colCombustible2" prefWidth="118.0" text="Combustible" />
                                  </columns>
                               </TableView>
                               <ComboBox layoutX="1403.0" layoutY="189.0" prefHeight="30.0" prefWidth="180.0" />
@@ -439,7 +445,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Button fx:id="btnBuscar2" layoutX="336.0" layoutY="202.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="80.0" style="-fx-background-color: #000000;">
+                              <Button fx:id="btnBuscar2" layoutX="336.0" layoutY="202.0" mnemonicParsing="false" onAction="#buscarVehiculo" prefHeight="31.0" prefWidth="80.0" style="-fx-background-color: #000000;">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="14.0" />
                                  </font>

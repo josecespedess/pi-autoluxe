@@ -524,6 +524,7 @@ public class ControladorClientes implements Initializable {
         }
         cbCombustible2.setDisable(true);
     }
+
     public void establecerClientes() throws SQLException, ClassNotFoundException {
         tablaClientes.getItems().clear();
         tablaClientes2.getItems().clear();
@@ -531,14 +532,14 @@ public class ControladorClientes implements Initializable {
         tablaClientes.setItems((ObservableList<Clientes>) listaClientes);
         tablaClientes2.setItems((ObservableList<Clientes>)listaClientes);
     }
-    public void establecerClienteAnadido(Clientes cliente)
-    {
+
+    public void establecerClienteAnadido(Clientes cliente) {
         tablaCliente.getItems().clear();
         ObservableList<Clientes> listaCliente = FXCollections.observableArrayList();
         listaCliente.add(cliente);
         tablaCliente.setItems(listaCliente);
-
     }
+
     public void establecerVehiculos() throws SQLException, ClassNotFoundException {
         tablaVehiculos.getItems().clear();
         tablaVehiculos2.getItems().clear();
@@ -546,21 +547,20 @@ public class ControladorClientes implements Initializable {
         tablaVehiculos.setItems((ObservableList<Vehiculos>) listaVehiculos);
         tablaVehiculos2.setItems((ObservableList<Vehiculos>)listaVehiculos);
     }
-    public void establecerVehiculoAnadido(Vehiculos vehiculo)
-    {
+
+    public void establecerVehiculoAnadido(Vehiculos vehiculo) {
         tablaVehiculo.getItems().clear();
         ObservableList<Vehiculos> listaVehiculo = FXCollections.observableArrayList();
         listaVehiculo.add(vehiculo);
         tablaVehiculo.setItems(listaVehiculo);
-
     }
+
     //Método para buscar en la tabla Clientes
     @FXML
     public void buscarDatosTablaClientes() throws SQLException, ClassNotFoundException {
         tablaClientes.getItems().clear();
         String opcion=cbOpcion.getValue();
-        switch(opcion)
-        {
+        switch(opcion) {
             case "General"-> establecerClientes();
             default ->{
                 List<Clientes> listaClientes=BDautoluxe.listadoClientesBD(opcion,tfBuscar.getText());
@@ -573,8 +573,7 @@ public class ControladorClientes implements Initializable {
     public void buscarDatosTablaClientes2() throws SQLException, ClassNotFoundException {
         tablaClientes2.getItems().clear();
         String opcion=cbOpcion2.getValue();
-        switch(opcion)
-        {
+        switch(opcion) {
             case "General"-> establecerClientes();
             default ->{
                 List<Clientes> listaClientes=BDautoluxe.listadoClientesBD(opcion,tfBuscar2.getText());
@@ -587,24 +586,23 @@ public class ControladorClientes implements Initializable {
     public void buscarDatosTablaVehiculos() throws SQLException, ClassNotFoundException {
         tablaVehiculos.getItems().clear();
         String opcion=cbOpcion3.getValue();
-        switch(opcion)
-        {
+        switch(opcion) {
             case "General"-> establecerClientes();
-            default ->{
+            default -> {
                 List<Vehiculos> listaVehiculos=BDautoluxe.listadoVehiculosBD(opcion,tfBuscar3.getText());
                 tablaVehiculos.setItems((ObservableList<Vehiculos>)listaVehiculos);
             }
         }
     }
+
     //Método para buscar en la tabla Vehiculos 2
     @FXML
     public void buscarDatosTablaVehiculos2() throws SQLException, ClassNotFoundException {
         tablaVehiculos2.getItems().clear();
         String opcion=cbOpcion4.getValue();
-        switch(opcion)
-        {
+        switch(opcion) {
             case "General"-> establecerClientes();
-            default ->{
+            default -> {
                 List<Vehiculos> listaVehiculos=BDautoluxe.listadoVehiculosBD(opcion,tfBuscar4.getText());
                 tablaVehiculos2.setItems((ObservableList<Vehiculos>)listaVehiculos);
             }
@@ -613,18 +611,14 @@ public class ControladorClientes implements Initializable {
     //Método para buscar Cliente
     @FXML
     public void buscarCliente() throws  ClassNotFoundException {
-        try
-        {
+        try {
             Clientes cliente=BDautoluxe.obtenerClienteDNI(tfBuscarDNI.getText());
-            if(cliente==null)
-            {
+            if(cliente==null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Diálogo de Alerta");
                 alert.setHeaderText("DNI no existente");
                 alert.showAndWait();
-            }
-            else
-            {
+            } else {
                 tfNombre2.setText(cliente.getNombre());
                 tfApellidos2.setText(cliente.getApellidos());
                 tfDNI2.setText(cliente.getDNI());
@@ -659,18 +653,14 @@ public class ControladorClientes implements Initializable {
     //Método para activar los campos para añadir vehiculo a cliente
     @FXML
     public void buscarClienteVehiculo() throws  ClassNotFoundException {
-        try
-        {
+        try {
             Clientes cliente=BDautoluxe.obtenerClienteDNI(tfBuscarDNI1.getText());
-            if(cliente==null)
-            {
+            if(cliente==null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Diálogo de Alerta");
                 alert.setHeaderText("DNI no existente");
                 alert.showAndWait();
-            }
-            else
-            {
+            } else {
                 tfMatricula1.setDisable(false);
                 tfBastidor1.setDisable(false);
                 tfMarca1.setDisable(false);
@@ -690,27 +680,22 @@ public class ControladorClientes implements Initializable {
                 cbCombustible1.setDisable(true);
                 acEditar1.setDisable(true);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //Método para buscar Vehiculo
     @FXML
     public void buscarVehiculo() throws  ClassNotFoundException {
-        try
-        {
+        try {
             Vehiculos vehiculo=BDautoluxe.obtenerVehiculoMatricula(tfBuscarMatricula.getText());
-            if(vehiculo==null)
-            {
+            if(vehiculo==null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Diálogo de Alerta");
                 alert.setHeaderText("Matrícula no existente");
                 alert.showAndWait();
-            }
-            else
-            {
+            } else {
                 tfMatricula2.setText(vehiculo.getMatricula());
                 tfBastidor2.setText(vehiculo.getNumBastidor());
                 tfMarca2.setText(vehiculo.getMarca());
@@ -738,9 +723,7 @@ public class ControladorClientes implements Initializable {
                 acBorrar1.setDisable(true);
                 acEditar2.setDisable(true);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

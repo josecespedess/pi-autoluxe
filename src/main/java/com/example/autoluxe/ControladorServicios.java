@@ -1,10 +1,6 @@
 package com.example.autoluxe;
 
-import ClasesObjetos.BDautoluxe;
-import ClasesObjetos.Empleados;
-import ClasesObjetos.Productos;
-import ClasesObjetos.Vehiculos;
-import javafx.collections.FXCollections;
+import ClasesObjetos.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,9 +14,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -83,6 +79,45 @@ public class ControladorServicios implements Initializable {
     private ComboBox<String> cbOpciones;
     private String[] opcionesBuscarProducto = {"General","ID", "Descripción"};
 
+    @FXML
+    private TableView<Vehiculos> tablaVehiculosServicios;
+
+    @FXML
+    private TableColumn<Vehiculos, String> colCliente2;
+    @FXML
+    private TableColumn<Servicios, String> colDescripcion2;
+    @FXML
+    private TableColumn<Servicios, String> colFecha2;
+    @FXML
+    private TableColumn<Servicios, Integer> colIdServicio2;
+    @FXML
+    private TableColumn<Vehiculos, String> colMarca2;
+    @FXML
+    private TableColumn<Vehiculos, String> colMatricula2;
+    @FXML
+    private TableColumn<Vehiculos, String> colColor2;
+    @FXML
+    private TableColumn<Vehiculos, String> colModelo2;
+    @FXML
+    private TableColumn<Vehiculos, String> colNBastidor2;
+    @FXML
+    private TableColumn<Vehiculos, String> colCombustible2;
+    @FXML
+    private TableColumn<Servicios, Float> colPrecio2;
+    @FXML
+    private TableColumn<Servicios, String> colMatriculaServicio2;
+    @FXML
+    private TextField tfMatricula2;
+    @FXML
+    private TextField tfReparacion;
+    @FXML
+    private DatePicker dpFecha;
+    @FXML
+    private TextField tfPrecio2;
+    @FXML
+    private TableView<Servicios> tablaServicios;
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
@@ -96,6 +131,7 @@ public class ControladorServicios implements Initializable {
             cbOpciones.getSelectionModel().selectFirst();
             establecerProductos();
             iniciarColumnas();
+            establecerVehiculos();
 
 
         } catch (SQLException e) {
@@ -126,6 +162,20 @@ public class ControladorServicios implements Initializable {
         colCantidad.setCellValueFactory(new PropertyValueFactory<Productos, Integer>("cantidad"));
         colPrecio.setCellValueFactory(new PropertyValueFactory<Productos, Float>("precio"));
         colAlmacen.setCellValueFactory(new PropertyValueFactory<Productos, String>("almacen"));
+
+        colIdServicio2.setCellValueFactory(new PropertyValueFactory<Servicios, Integer>("idServicio"));
+        colDescripcion2.setCellValueFactory(new PropertyValueFactory<Servicios, String>("descripcion"));
+        colPrecio2.setCellValueFactory(new PropertyValueFactory<Servicios, Float>("precio"));
+        colFecha2.setCellValueFactory(new PropertyValueFactory<Servicios, String>("fecha"));
+        colMatriculaServicio2.setCellValueFactory(new PropertyValueFactory<Servicios, String>("idVehiculo"));
+
+        colMatricula2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("matricula"));
+        colNBastidor2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("numBastidor"));
+        colMarca2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("marca"));
+        colModelo2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("modelo"));
+        colCliente2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("DNI_cliente"));
+        colColor2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("color"));
+        colCombustible2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("combustible"));
     }
 
     private void establecerProductos() {
@@ -145,21 +195,63 @@ public class ControladorServicios implements Initializable {
             mostrarAlerta("Error", "Todos los campos son obligatorios");
             return;
         }
-        else
-        {
+        else {
             Productos producto = new Productos(descripcion, cantidad, precio, almacen,"");
             BDautoluxe.altaProductoBD(producto);
             limpiarCampos();
             establecerProductos();
         }
-
-
     }
+
+    @FXML
+    private void agregarServicio() throws SQLException, ClassNotFoundException {
+        String descripcion = tfReparacion.getText();
+        String fecha = dpFecha.getValue().toString(); // Usar getValue() en lugar de toString()
+        Float precio = Float.parseFloat(tfPrecio2.getText()); // Convertir el texto a flotante
+        String idVehiculo = tfMatricula2.getText();
+        Servicios servicio = new Servicios(descripcion, fecha, precio, idVehiculo);
+        BDautoluxe.altaServicioBD(servicio);
+        establecerServicios();
+    }
+
+    private void establecerServicios() throws SQLException, ClassNotFoundException {
+        tablaServicios.getItems().clear();
+        List<Servicios> listaServicios = BDautoluxe.listadoServiciosBD();
+        tablaServicios.setItems((ObservableList<Servicios>) listaServicios);
+    }
+
+    //Método para buscar Vehiculo
+    @FXML
+    private void buscarVehiculo() throws  ClassNotFoundException {
+        try {
+            Vehiculos vehiculo = BDautoluxe.obtenerVehiculoMatricula(tfMatricula2.getText());
+            if(vehiculo == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Diálogo de Alerta");
+                alert.setHeaderText("Matrícula no existente");
+                alert.showAndWait();
+            } else {
+                tfReparacion.setDisable(false);
+                dpFecha.setDisable(false);
+                tfPrecio2.setDisable(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void establecerVehiculos() throws SQLException, ClassNotFoundException {
+        tablaVehiculosServicios.getItems().clear();
+        List<Vehiculos> listaVehiculos=BDautoluxe.listadoVehiculosBD();
+        tablaVehiculosServicios.setItems((ObservableList<Vehiculos>) listaVehiculos);
+    }
+
     //Método para actualizar las tablas
     @FXML
     public void actualizarTablas() throws SQLException, ClassNotFoundException {
         establecerProductos();
     }
+
     private void limpiarCampos() {
         tfCantidad.clear();
         tfDescripcion.clear();

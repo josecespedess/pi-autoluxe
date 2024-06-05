@@ -1327,6 +1327,25 @@ public class BDautoluxe {
     // -----------------------------------------------------------------------------------------------------------------
     // SERVICIOS
     // -----------------------------------------------------------------------------------------------------------------
+    // Método añadir producto a la base de datos
+    public static void altaServicioBD(Servicios servicio) {
+        try {
+            PreparedStatement st = connection.prepareStatement("INSERT INTO servicios (descripcion, fecha, precio, idVehiculo) VALUES (?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+            st.setString(1, servicio.getDescripcion());
+            st.setString(2, servicio.getFecha());
+            st.setFloat(3, servicio.getPrecio());
+            st.setString(4, servicio.getIdVehiculo());
+
+            st.executeUpdate();
+
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Producto añadido.", "");
+
+            st.close(); // Cerrar la declaración después de su uso
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     //Método mostrar SERVICIOS
     public static List<Servicios> listadoServiciosBD() {
         List<Servicios> listaServicios = FXCollections.observableArrayList();
