@@ -128,72 +128,64 @@ public class ControladorFacturas
         }
         cbServicio.setItems(listaIDs);
     }
+
     @FXML
-    public void generarfactura()
-    {
-        if((cbCliente.getValue()=="Seleccione cliente"||cbCliente.getValue()==null||cbCliente.getValue()=="")||(cbEmpleado.getValue()=="Seleccione empleado"||cbEmpleado.getValue()==null||cbEmpleado.getValue()=="")||tablaFactura.getItems().isEmpty())
-        {
+    public void generarfactura() {
+        if((cbCliente.getValue()=="Seleccione cliente"||cbCliente.getValue()==null||cbCliente.getValue()=="")||(cbEmpleado.getValue()=="Seleccione empleado"||cbEmpleado.getValue()==null||cbEmpleado.getValue()=="")||tablaFactura.getItems().isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING,"Error al generar facturar.");
             estblecerDatosFactura();
-        }
-        else
-        {
+        } else {
             ventaPDF ventaPDF = new ventaPDF();
             ventaPDF.DatosCliente(cbCliente.getValue().toString());
             ventaPDF.DatosEmpleado(cbEmpleado.getValue().toString());
             ventaPDF.generarFactura();
         }
     }
-    public void estblecerDatosFactura()
-    {
+
+    public void estblecerDatosFactura() {
         precioSubtotal.setText(Float.toString(establecerPrecioSubtotal()));
         IVA.setText("21.00");
         descuento.setText("0.00");
         cambio.setText("0.00");
         efectivo.setText("0.00");
-        if(descuento.getText().equals("0.00"))
+        if(descuento.getText().equals("0.00")) {
             precioTotalPagar.setText(Float.toString(establecerPrecioSubtotal()*1.21f));
+        }
     }
-    public float establecerPrecioSubtotal()
-    {
+
+    public float establecerPrecioSubtotal() {
         float total = 0.0f;
         for (ProductosServiciosFacturas item : tablaFactura.getItems()) {
             total += item.getPrecioT();
         }
         return total;
     }
+
     @FXML
-    public void calcularEfectivo()
-    {
-        if(efectivo.getText().equals("0.00")||efectivo.getText().equals("0"))
-        {
+    public void calcularEfectivo() {
+        if(efectivo.getText().equals("0.00")||efectivo.getText().equals("0")) {
             cambio.setText(precioTotalPagar.getText());
-        }
-        else
+        } else {
             cambio.setText(String.valueOf(Float.parseFloat(precioTotalPagar.getText())-Float.parseFloat(efectivo.getText())));
-    }
-    @FXML
-    public void establecerDescuento()
-    {
-        if(descuento.getText().equals("0.00")||descuento.getText().equals("0"))
-        {
-            precioTotalPagar.setText(Float.toString(establecerPrecioSubtotal()*1.21f));
         }
-        else
-        {
+
+    }
+
+    @FXML
+    public void establecerDescuento() {
+        if(descuento.getText().equals("0.00")||descuento.getText().equals("0")) {
+            precioTotalPagar.setText(Float.toString(establecerPrecioSubtotal()*1.21f));
+        } else {
             float calculo=parseFloat(precioTotalPagar.getText())*(1-parseFloat(descuento.getText())/100);
             precioTotalPagar.setText(String.valueOf(calculo));
         }
     }
+
     @FXML
-    public void anadirProducto()
-    {
-        if(cbProducto.getValue()==""||cbProducto.getValue()=="Seleccione producto")
-        {
+    public void anadirProducto() {
+        if(cbProducto.getValue()==""||cbProducto.getValue()=="Seleccione producto") {
             mostrarAlerta(Alert.AlertType.WARNING,"Especifique el id del producto");
-        }
-        else
-        {
+        } else {
             String idProducto= (String) cbProducto.getValue();
             Productos producto=BDautoluxe.obtenerProductoID(idProducto);
             int cantidad=cantidadProducto.getValue();
@@ -208,15 +200,12 @@ public class ControladorFacturas
             estblecerDatosFactura();
         }
     }
+
     @FXML
-    public void anadirServicios()
-    {
-        if(cbServicio.getValue()==""||cbServicio.getValue()=="Seleccione servicio")
-        {
+    public void anadirServicios() {
+        if(cbServicio.getValue()==""||cbServicio.getValue()=="Seleccione servicio") {
             mostrarAlerta(Alert.AlertType.WARNING,"Especifique el id del servicio");
-        }
-        else
-        {
+        } else {
             String idServicio= (String) cbServicio.getValue();
             Servicios servicio=BDautoluxe.obtenerServicioID(idServicio);
             int cantidad=cantidadServicio.getValue();
@@ -231,110 +220,91 @@ public class ControladorFacturas
             estblecerDatosFactura();
         }
     }
+
     //Método para buscar Cliente
     @FXML
     public void buscarCliente() throws  ClassNotFoundException {
-        try
-        {
+        try {
             Clientes cliente= BDautoluxe.obtenerClienteDNI(tfBuscarCliente.getText());
-            if(cliente==null)
-            {
+            if(cliente==null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Diálogo de Alerta");
                 alert.setHeaderText("DNI no existente");
                 alert.showAndWait();
                 tfBuscarCliente.setText("");
                 cbCliente.setValue("Seleccione cliente");
-            }
-            else
-            {
+            } else {
                 cbCliente.setValue(cliente.getDNI());
             }
             limpiarCampos();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //Método para buscar Empleado
     @FXML
     public void buscarEmpleado() throws  ClassNotFoundException {
-        try
-        {
+        try {
             Empleados empleado= BDautoluxe.obtenerEmpleadoDNI(tfBuscarEmpleado.getText());
-            if(empleado==null)
-            {
+            if(empleado==null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Diálogo de Alerta");
                 alert.setHeaderText("DNI no existente");
                 alert.showAndWait();
                 tfBuscarEmpleado.setText("");
                 cbEmpleado.setValue("Seleccione empleado");
-            }
-            else
-            {
+            } else {
                 cbEmpleado.setValue(empleado.getDNI());
             }
             limpiarCampos();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //Método para buscar Producto
     @FXML
     public void buscarProducto() throws  ClassNotFoundException {
-        try
-        {
+        try {
             Productos producto= BDautoluxe.obtenerProductoID(tfBuscarProducto.getText());
-            if(producto==null)
-            {
+            if(producto==null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Diálogo de Alerta");
                 alert.setHeaderText("ID no existente");
                 alert.showAndWait();
                 tfBuscarProducto.setText("");
                 cbProducto.setValue("Seleccione producto");
-            }
-            else
-            {
+            } else {
                 cbProducto.setValue(producto.getNumReferencia());
             }
             limpiarCampos();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //Método para buscar Producto
     @FXML
     public void buscarServicio() throws  ClassNotFoundException {
-        try
-        {
+        try {
             Servicios servicio= BDautoluxe.obtenerServicioID(tfBuscarServicio.getText());
-            if(servicio==null)
-            {
+            if(servicio==null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Diálogo de Alerta");
                 alert.setHeaderText("ID no existente");
                 alert.showAndWait();
                 tfBuscarServicio.setText("");
                 cbServicio.setValue("Seleccione producto");
-            }
-            else
-            {
+            } else {
                 cbServicio.setValue(servicio.getIdServicio());
             }
             limpiarCampos();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private void mostrarAlerta(Alert.AlertType tipo, String encabezado) {
         mostrarAlerta(tipo, encabezado, null);
     }
@@ -346,12 +316,14 @@ public class ControladorFacturas
         alert.setContentText(contenido);
         alert.showAndWait();
     }
+
     private void limpiarCampos() {
         TextField[] campos = {tfBuscarCliente,tfBuscarEmpleado,tfBuscarProducto,tfBuscarServicio};
         for (TextField campo : campos) {
             campo.clear();
         }
     }
+
     @FXML
     private void cerrarVentana() {
         try {
@@ -376,7 +348,9 @@ public class ControladorFacturas
         colBorrar.setCellValueFactory(new PropertyValueFactory<ProductosServiciosFacturas, Button>("borrar"));
         tablaFactura.setItems(FXCollections.observableArrayList());
     }
+
     public static TableView<ProductosServiciosFacturas> getTablaFacturas() {return tablaFactura1;}
+
     public static String getTotalAPagar() {return precioTotalPagar1.getText();}
     /*
     MENU 8/8

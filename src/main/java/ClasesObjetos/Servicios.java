@@ -1,7 +1,6 @@
 package ClasesObjetos;
 
-public class Servicios
-{
+public class Servicios {
     private int idServicio;
     private String descripcion;
     private String fecha; ;

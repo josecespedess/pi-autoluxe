@@ -1231,6 +1231,55 @@ public class BDautoluxe {
         }
     }
 
+    public static void modificarProductoPorReferencia(Productos producto) {
+        try {
+            // Preparar la consulta SQL para actualizar el producto por su número de referencia
+            String sql = "UPDATE productos SET descripcion = ?, precio = ?, cantidad = ?, almacen = ?, URLfoto = ? WHERE numReferencia = ?";
+            PreparedStatement st = connection.prepareStatement(sql);
+
+            // Establecer los valores de los parámetros en la consulta
+            st.setString(1, producto.getDescripcion());
+            st.setDouble(2, producto.getPrecio());
+            st.setInt(3, producto.getCantidad());
+            st.setString(4, producto.getAlmacen());
+            st.setString(5, producto.getURLfoto());
+            st.setInt(6, producto.getNumReferencia()); // Utilizar el número de referencia para identificar el producto a modificar
+
+            // Ejecutar la consulta
+            st.executeUpdate();
+
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Producto modificado.", "");
+
+            st.close(); // Cerrar la declaración después de su uso
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void eliminarProductoPorReferencia(int numReferencia) {
+        try {
+            // Crear la consulta SQL DELETE
+            String query = "DELETE FROM productos WHERE numReferencia = ?";
+
+            // Preparar la declaración
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, numReferencia);
+
+            // Ejecutar la consulta
+            statement.executeUpdate();
+
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Producto eliminado.", "");
+
+            // Cerrar la declaración después de su uso
+            statement.close();
+        } catch (SQLException e) {
+            // Manejar cualquier error de SQL
+            e.printStackTrace();
+        }
+    }
+
+
+
     //Método mostrar Productos
     public static List<Productos> listadoProductosBD() {
         List<Productos> listaProductos = FXCollections.observableArrayList();
@@ -1345,6 +1394,51 @@ public class BDautoluxe {
             e.printStackTrace();
         }
     }
+
+    public static void modificarServicioPorId(Servicios servicio) {
+        try {
+            // Preparar la consulta SQL para actualizar el servicio por su ID
+            String sql = "UPDATE servicios SET descripcion = ?, precio = ?, fecha = ?, idVehiculo = ? WHERE idServicio = ?";
+            PreparedStatement st = connection.prepareStatement(sql);
+
+            // Establecer los valores de los parámetros en la consulta
+            st.setString(1, servicio.getDescripcion());
+            st.setDouble(2, servicio.getPrecio());
+            st.setDate(3, java.sql.Date.valueOf(servicio.getFecha())); // Asegúrate de que servicio.getFecha() devuelva un objeto LocalDate
+            st.setString(4, servicio.getIdVehiculo());
+            st.setInt(5, servicio.getIdServicio()); // Utilizar el ID del servicio para identificar el servicio a modificar
+
+            // Ejecutar la consulta
+            st.executeUpdate();
+
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Servicio modificado.", "");
+
+            st.close(); // Cerrar la declaración después de su uso
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void eliminarServicioPorId(int idServicio) {
+        try {
+            // Preparar la consulta SQL para eliminar el servicio por su ID
+            String sql = "DELETE FROM servicios WHERE idServicio = ?";
+            PreparedStatement st = connection.prepareStatement(sql);
+
+            // Establecer el valor del parámetro en la consulta
+            st.setInt(1, idServicio);
+
+            // Ejecutar la consulta
+            st.executeUpdate();
+
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Servicio eliminado.", "");
+
+            st.close(); // Cerrar la declaración después de su uso
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     //Método mostrar SERVICIOS
     public static List<Servicios> listadoServiciosBD() {

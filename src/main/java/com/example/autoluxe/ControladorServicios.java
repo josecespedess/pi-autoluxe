@@ -1,21 +1,30 @@
 package com.example.autoluxe;
 
 import ClasesObjetos.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -68,10 +77,6 @@ public class ControladorServicios implements Initializable {
     @FXML
     private TableColumn<Productos, Float> colPrecio;
 
-    @FXML
-    private TableColumn<?,Button> colEditar;
-    @FXML
-    private TableColumn<?,Button> colEliminar;
     @FXML
     private TableView<Productos> tableStock;
 
@@ -126,8 +131,7 @@ public class ControladorServicios implements Initializable {
 
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle)
-    {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             BDautoluxe.conectar();
             //Aplicamos la lista al ChoiceBox
@@ -144,6 +148,30 @@ public class ControladorServicios implements Initializable {
             iniciarColumnas();
             establecerVehiculos();
             establecerServicios();
+
+            tableStock.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) { // Verificar si se hizo doble clic
+                    // Obtener el elemento seleccionado
+                    Productos productoSeleccionado = tableStock.getSelectionModel().getSelectedItem();
+
+                    if (productoSeleccionado != null) {
+                        // Aquí abrirías un modal para mostrar los detalles del producto seleccionado
+                        mostrarDetallesProducto(productoSeleccionado);
+                    }
+                }
+            });
+
+            tablaServicios.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) { // Verificar si se hizo doble clic
+                    // Obtener el elemento seleccionado
+                    Servicios servicioSeleccionado = tablaServicios.getSelectionModel().getSelectedItem();
+
+                    if (servicioSeleccionado != null) {
+                        // Aquí abrirías un modal para mostrar los detalles del producto seleccionado
+                        mostrarDetallesServicio(servicioSeleccionado);
+                    }
+                }
+            });
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -194,6 +222,24 @@ public class ControladorServicios implements Initializable {
         colFecha2.setCellValueFactory(new PropertyValueFactory<Servicios, String>("fecha"));
         colMatriculaServicio2.setCellValueFactory(new PropertyValueFactory<Servicios, String>("idVehiculo"));
 
+        colFecha2.setCellFactory(column -> {
+            return new TableCell<Servicios, String>() {
+                private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        LocalDate date = LocalDate.parse(item); // assuming your date string is in ISO_LOCAL_DATE format
+                        setText(formatter.format(date));
+                    }
+                }
+            };
+        });
+
         colMatricula2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("matricula"));
         colNBastidor2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("numBastidor"));
         colMarca2.setCellValueFactory(new PropertyValueFactory<Vehiculos, String>("marca"));
@@ -240,6 +286,7 @@ public class ControladorServicios implements Initializable {
             }
         }
     }
+
 
     @FXML
     private void agregarServicio() throws SQLException, ClassNotFoundException {
@@ -461,5 +508,225 @@ public class ControladorServicios implements Initializable {
         this.correoUsuario = correo;
         this.btnCorreo.setText(correo);
     }
+
+    // Método para mostrar los detalles del producto en un modal
+    private void mostrarDetallesProducto(Productos producto) {
+        // Crear un nuevo Stage para el modal
+        Stage modalStage = new Stage();
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalStage.setTitle("Detalles del Producto");
+
+        // Crear un nuevo VBox para el contenido del modal
+        VBox modalContent = new VBox();
+        modalContent.setSpacing(10);
+        modalContent.setAlignment(Pos.CENTER_LEFT);
+        modalContent.setPadding(new Insets(20)); // Añadir márgenes
+
+        // Crear TextField para editar los detalles del producto
+        TextField tfReferencia = new TextField(String.valueOf(producto.getNumReferencia()));
+        tfReferencia.setEditable(false);
+        TextField tfDescripcion = new TextField(producto.getDescripcion());
+        TextField tfCantidad = new TextField(String.valueOf(producto.getCantidad()));
+        TextField tfPrecio = new TextField(String.valueOf(producto.getPrecio()));
+        ComboBox<String> tfAlmacen = new ComboBox<>(FXCollections.observableArrayList(almacenes));
+        tfAlmacen.setValue(producto.getAlmacen());
+
+
+        // Crear etiquetas para los TextField
+        Label lblReferencia = new Label("Referencia:");
+        lblReferencia.setAlignment(Pos.CENTER_LEFT);
+        Label lblDescripcion = new Label("Descripción:");
+        lblDescripcion.setAlignment(Pos.CENTER_LEFT);
+        Label lblCantidad = new Label("Cantidad:");
+        lblCantidad.setAlignment(Pos.CENTER_LEFT);
+        Label lblPrecio = new Label("Precio:");
+        lblPrecio.setAlignment(Pos.CENTER_LEFT);
+        Label lblAlmacen = new Label("Almacén:");
+        lblAlmacen.setAlignment(Pos.CENTER_LEFT);
+
+        // Agregar las etiquetas y TextField al VBox
+        modalContent.getChildren().addAll(
+                lblReferencia, tfReferencia,
+                lblDescripcion, tfDescripcion,
+                lblCantidad, tfCantidad,
+                lblPrecio, tfPrecio,
+                lblAlmacen, tfAlmacen
+        );
+
+        // Crear un HBox para los botones de editar y cerrar
+        HBox buttonsBox = new HBox();
+        buttonsBox.setSpacing(10);
+        buttonsBox.setAlignment(Pos.CENTER_RIGHT); // Alinear a la derecha
+
+        // Crear botón para editar
+        Button btnEditar = new Button("EDITAR");
+        btnEditar.setStyle("-fx-background-color: #FFA423; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold"); // Estilo CSS para color rojo
+        btnEditar.setOnAction(e -> {
+            // Crear un nuevo objeto Productos con los valores modificados
+            Productos productoModificado = new Productos(producto.getNumReferencia(), tfDescripcion.getText(),
+                    Integer.parseInt(tfCantidad.getText()), Float.parseFloat(tfPrecio.getText()),
+                    tfAlmacen.getValue(), ""
+            );
+            BDautoluxe.modificarProductoPorReferencia(productoModificado);
+
+            modalStage.close();
+            establecerProductos();
+        });
+
+        // Crear botón para eliminar
+        Button btnEliminar = new Button("ELIMINAR");
+        btnEliminar.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold"); // Estilo CSS para color rojo
+        btnEliminar.setOnAction(e -> {
+            // Obtener el número de referencia del producto
+            int numReferencia = producto.getNumReferencia();
+            // Llamar al método en BDautoluxe para eliminar el producto por su número de referencia
+            BDautoluxe.eliminarProductoPorReferencia(numReferencia);
+            // Cerrar el modal y actualizar la tabla de productos
+            modalStage.close();
+            establecerProductos();
+        });
+
+        // Crear botón para cerrar
+        Button btnCerrar = new Button("CERRAR");
+        btnCerrar.setStyle("-fx-background-color: #000000; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold"); // Estilo CSS para color rojo
+        btnCerrar.setOnAction(e -> modalStage.close());
+
+        // Agregar los botones al HBox
+        buttonsBox.getChildren().addAll(btnEditar, btnEliminar, btnCerrar);
+
+        // Agregar el HBox al VBox
+        modalContent.getChildren().add(buttonsBox);
+
+        // Crear una nueva escena con el VBox como raíz y ajustar el tamaño
+        Scene modalScene = new Scene(modalContent, 450, 400); // Tamaño ajustado
+
+        // Establecer la escena en el Stage y mostrar el modal
+        modalStage.setScene(modalScene);
+        modalStage.showAndWait();
+    }
+
+    // Método para mostrar los detalles del servicio en un modal
+    private void mostrarDetallesServicio(Servicios servicio) {
+        // Crear un nuevo Stage para el modal
+        Stage modalStage = new Stage();
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalStage.setTitle("Detalles del Servicio");
+
+        // Crear un nuevo VBox para el contenido del modal
+        VBox modalContent = new VBox();
+        modalContent.setSpacing(10);
+        modalContent.setAlignment(Pos.CENTER_LEFT);
+        modalContent.setPadding(new Insets(20)); // Añadir márgenes
+
+
+
+        // Crear TextField para mostrar los detalles del servicio
+        TextField tfIdServicio = new TextField(String.valueOf(servicio.getIdServicio()));
+        tfIdServicio.setEditable(false);
+        TextField tfDescripcion = new TextField(servicio.getDescripcion());
+        TextField tfPrecio = new TextField(String.valueOf(servicio.getPrecio()));
+        DatePicker datePicker = new DatePicker();
+        datePicker.setValue(LocalDate.parse(servicio.getFecha())); // Aquí parseamos la fecha del servicio a un objeto LocalDate
+        TextField tfMatricula = new TextField(servicio.getIdVehiculo());
+
+        // Crear etiquetas para los TextField
+        Label lblIdServicio = new Label("ID del Servicio:");
+        lblIdServicio.setAlignment(Pos.CENTER_LEFT);
+        Label lblDescripcion = new Label("Descripción:");
+        lblDescripcion.setAlignment(Pos.CENTER_LEFT);
+        Label lblPrecio = new Label("Precio:");
+        lblPrecio.setAlignment(Pos.CENTER_LEFT);
+        Label lblFecha = new Label("Fecha:");
+        lblFecha.setAlignment(Pos.CENTER_LEFT);
+        Label lblMatricula = new Label("Matrícula:");
+        lblMatricula.setAlignment(Pos.CENTER_LEFT);
+
+        // Agregar las etiquetas y TextField al VBox
+        modalContent.getChildren().addAll(
+                lblIdServicio, tfIdServicio,
+                lblDescripcion, tfDescripcion,
+                lblPrecio, tfPrecio,
+                lblFecha, datePicker,
+                lblMatricula, tfMatricula
+        );
+
+        // Crear un HBox para los botones de editar, eliminar y cerrar
+        HBox buttonsBox = new HBox();
+        buttonsBox.setSpacing(10);
+        buttonsBox.setAlignment(Pos.CENTER_RIGHT); // Alinear a la derecha
+
+        // Crear botón para editar
+        Button btnEditar = new Button("EDITAR");
+        btnEditar.setStyle("-fx-background-color: #FFA423; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold"); // Estilo CSS para color naranja
+        btnEditar.setOnAction(e -> {
+
+            // Suponiendo que item es el objeto del que obtienes la fecha
+            LocalDate fechaSeleccionada = datePicker.getValue();
+
+            // Convertir LocalDate a String en el formato deseado
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String fechaFormateada = fechaSeleccionada.format(formatter);
+
+            // Crear un nuevo objeto Servicio con los valores modificados
+            Servicios servicioModificado = new Servicios (
+                    servicio.getIdServicio(), // Mantener el mismo ID del servicio
+                    tfDescripcion.getText(), // Obtener la descripción del TextField
+                    fechaFormateada, // Usar la fecha formateada
+                    Float.parseFloat(tfPrecio.getText()), // Obtener el precio del TextField
+                    tfMatricula.getText() // Obtener la matrícula del TextField
+            );
+
+            // Llamar al método en BDautoluxe para modificar el servicio por su ID
+            BDautoluxe.modificarServicioPorId(servicioModificado);
+
+            // Cerrar el modal y actualizar la tabla de servicios
+            modalStage.close();
+            try {
+                establecerServicios();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        // Crear botón para eliminar
+        Button btnEliminar = new Button("ELIMINAR");
+        btnEliminar.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold"); // Estilo CSS para color rojo
+        btnEliminar.setOnAction(e -> {
+            // Obtener el ID del servicio
+            int idServicio = servicio.getIdServicio();
+            // Llamar al método en BDautoluxe para eliminar el servicio por su ID
+            BDautoluxe.eliminarServicioPorId(idServicio);
+            // Cerrar el modal y actualizar la tabla de servicios
+            modalStage.close();
+            try {
+                establecerServicios();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        // Crear botón para cerrar
+        Button btnCerrar = new Button("CERRAR");
+        btnCerrar.setStyle("-fx-background-color: #000000; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold"); // Estilo CSS para color negro
+        btnCerrar.setOnAction(e -> modalStage.close());
+
+        // Agregar los botones al HBox
+        buttonsBox.getChildren().addAll(btnEditar, btnEliminar, btnCerrar);
+
+        // Agregar el HBox al VBox
+        modalContent.getChildren().add(buttonsBox);
+
+        // Crear una nueva escena con el VBox como raíz y ajustar el tamaño
+        Scene modalScene = new Scene(modalContent, 450, 400); // Tamaño ajustado
+
+        // Establecer la escena en el Stage y mostrar el modal
+        modalStage.setScene(modalScene);
+        modalStage.showAndWait();
+    }
+
 
 }

@@ -274,8 +274,6 @@
                                     <TableColumn fx:id="colCantidad" minWidth="1.0" prefWidth="66.0" text="Cantidad" />
                                     <TableColumn fx:id="colPrecio" prefWidth="87.0" text="Precio" />
                                     <TableColumn fx:id="colAlmacen" text="Almacén" />
-                                    <TableColumn fx:id="colEditar" prefWidth="75.0" text="EDITAR" />
-                                    <TableColumn fx:id="colEliminar" prefWidth="75.0" text="ELIMINAR" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
