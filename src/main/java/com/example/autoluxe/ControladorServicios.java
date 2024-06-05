@@ -646,8 +646,8 @@ public class ControladorServicios implements Initializable {
                 lblIdServicio, tfIdServicio,
                 lblDescripcion, tfDescripcion,
                 lblPrecio, tfPrecio,
-                lblFecha, datePicker,
-                lblMatricula, tfMatricula
+                lblMatricula, tfMatricula,
+                lblFecha, datePicker
         );
 
         // Crear un HBox para los botones de editar, eliminar y cerrar
