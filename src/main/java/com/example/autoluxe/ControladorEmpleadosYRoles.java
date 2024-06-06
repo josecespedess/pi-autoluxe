@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -165,9 +166,9 @@ public class ControladorEmpleadosYRoles  {
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("AutoLuxe");
             nuevaVentana.setScene(new Scene(root,1920,1000));
+            nuevaVentana.getIcons().add(new Image(getClass().getResourceAsStream("/imagenes/LogoAutoLuxe.png")));
             Stage ventanaActual = (Stage) btnCerrarSesion.getScene().getWindow();
             ventanaActual.close();nuevaVentana.show();
-            contenedor.getChildren().setAll(root);
         } catch (Exception e) {
             e.printStackTrace();
         }

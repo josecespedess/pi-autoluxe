@@ -2,6 +2,7 @@ package com.example.autoluxe;
 
 import ClasesObjetos.BDautoluxe;
 import ClasesObjetos.Clientes;
+import ClasesObjetos.Empleados;
 import ClasesObjetos.Vehiculos;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -23,6 +25,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ControladorClientes implements Initializable {
+    @FXML
+    private Button btnEmpleados;
     @FXML
     private Label btnCorreo;
     private String correoUsuario = "";
@@ -342,7 +346,14 @@ public class ControladorClientes implements Initializable {
         }
 
     }
-
+    public void bloquearEmpleados()
+    {
+        Empleados empleado=BDautoluxe.obtenerEmpleadoCorreo(btnCorreo.getText());
+        if(!empleado.getRol().contains("Administrador"))
+        {
+            btnEmpleados.setDisable(true);
+        }
+    }
     @FXML
     private void introducirClienteBD() throws SQLException, ClassNotFoundException {
         if (tfNombre.getText().isEmpty() || tfDNI.getText().isEmpty() || tfApellidos.getText().isEmpty() || tfEmail.getText().isEmpty() || tfTelefono.getText().isEmpty()) {
@@ -849,9 +860,9 @@ public class ControladorClientes implements Initializable {
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("AutoLuxe");
             nuevaVentana.setScene(new Scene(root,1920,1000));
+            nuevaVentana.getIcons().add(new Image(getClass().getResourceAsStream("/imagenes/LogoAutoLuxe.png")));
             Stage ventanaActual = (Stage) btnCerrarSesion.getScene().getWindow();
             ventanaActual.close();nuevaVentana.show();
-            contenedor.getChildren().setAll(root);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -998,5 +1009,6 @@ public class ControladorClientes implements Initializable {
     public void setCorreoUsuario(String correo) {
         this.correoUsuario = correo;
         this.btnCorreo.setText(correo);
+        bloquearEmpleados();
     }
 }

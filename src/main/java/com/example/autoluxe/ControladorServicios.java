@@ -31,6 +31,8 @@ import java.util.ResourceBundle;
 
 public class ControladorServicios implements Initializable {
     @FXML
+    private Button btnEmpleados;
+    @FXML
     private ImageView btnCerrarSesion;
     @FXML
     private AnchorPane contenedor;
@@ -179,7 +181,14 @@ public class ControladorServicios implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
+    public void bloquearEmpleados()
+    {
+        Empleados empleado= BDautoluxe.obtenerEmpleadoCorreo(btnCorreo.getText());
+        if(!empleado.getRol().contains("Administrador"))
+        {
+            btnEmpleados.setDisable(true);
+        }
+    }
     //Método para buscar en la tabla Productos
     @FXML
     public void buscarDatosTablaProductos() throws SQLException, ClassNotFoundException {
@@ -390,9 +399,9 @@ public class ControladorServicios implements Initializable {
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("AutoLuxe");
             nuevaVentana.setScene(new Scene(root,1920,1000));
+            nuevaVentana.getIcons().add(new Image(getClass().getResourceAsStream("/imagenes/LogoAutoLuxe.png")));
             Stage ventanaActual = (Stage) btnCerrarSesion.getScene().getWindow();
             ventanaActual.close();nuevaVentana.show();
-            contenedor.getChildren().setAll(root);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -507,6 +516,7 @@ public class ControladorServicios implements Initializable {
     public void setCorreoUsuario(String correo) {
         this.correoUsuario = correo;
         this.btnCorreo.setText(correo);
+        bloquearEmpleados();
     }
 
     // Método para mostrar los detalles del producto en un modal

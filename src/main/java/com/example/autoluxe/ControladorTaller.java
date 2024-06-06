@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -27,6 +28,8 @@ import java.util.ResourceBundle;
 
 public class ControladorTaller  implements Initializable
 {
+    @FXML
+    private Button btnEmpleados;
     @FXML
     private ImageView btnCerrarSesion;
     @FXML
@@ -180,6 +183,14 @@ public class ControladorTaller  implements Initializable
             abrirEditarElevador(6,acElevador6.getText());
         });
         establecerDatos();
+    }
+    public void bloquearEmpleados()
+    {
+        Empleados empleado= BDautoluxe.obtenerEmpleadoCorreo(btnCorreo.getText());
+        if(!empleado.getRol().contains("Administrador"))
+        {
+            btnEmpleados.setDisable(true);
+        }
     }
      public void establecerDatos()
      {
@@ -393,9 +404,9 @@ public class ControladorTaller  implements Initializable
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("AutoLuxe");
             nuevaVentana.setScene(new Scene(root,1920,1000));
+            nuevaVentana.getIcons().add(new Image(getClass().getResourceAsStream("/imagenes/LogoAutoLuxe.png")));
             Stage ventanaActual = (Stage) btnCerrarSesion.getScene().getWindow();
             ventanaActual.close();nuevaVentana.show();
-            contenedor.getChildren().setAll(root);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -520,5 +531,6 @@ public class ControladorTaller  implements Initializable
     public void setCorreoUsuario(String correo) {
         this.correoUsuario = correo;
         this.btnCorreo.setText(correo);
+        bloquearEmpleados();
     }
 }

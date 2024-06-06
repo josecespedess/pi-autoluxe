@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -30,7 +31,8 @@ import java.util.ResourceBundle;
 public class ControladorPerfil implements Initializable {
     // Controlador base de datos
     BDautoluxe bd = new BDautoluxe();
-
+@FXML
+        private Button btnEmpleados;
     // Datos del usuario
     String dni, nombre, apellidos, telefono, rol, correo, password;
     @FXML
@@ -107,7 +109,14 @@ public class ControladorPerfil implements Initializable {
         panelCuenta.setVisible(true);
         panelCuenta2.setVisible(false);
     }
-
+    public void bloquearEmpleados()
+    {
+        Empleados empleado= BDautoluxe.obtenerEmpleadoCorreo(btnCorreo.getText());
+        if(!empleado.getRol().contains("Administrador"))
+        {
+            btnEmpleados.setDisable(true);
+        }
+    }
     @FXML
     private void abrirMiCuenta() {
         panelCuenta.setVisible(true);
@@ -197,9 +206,10 @@ public class ControladorPerfil implements Initializable {
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("AutoLuxe");
             nuevaVentana.setScene(new Scene(root,1920,1000));
+            nuevaVentana.getIcons().add(new Image(getClass().getResourceAsStream("/imagenes/LogoAutoLuxe.png")));
             Stage ventanaActual = (Stage) btnCerrarSesion.getScene().getWindow();
-            ventanaActual.close();nuevaVentana.show();
-            contenedor.getChildren().setAll(root);
+            ventanaActual.close();
+            nuevaVentana.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -373,5 +383,6 @@ public class ControladorPerfil implements Initializable {
         this.correoUsuario = correo;
         this.btnCorreo.setText(correo);
         establecerDatos();
+        bloquearEmpleados();
     }
 }

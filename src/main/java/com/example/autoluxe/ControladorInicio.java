@@ -1,17 +1,27 @@
 package com.example.autoluxe;
 
+import ClasesObjetos.BDautoluxe;
+import ClasesObjetos.Empleados;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
+
 public class ControladorInicio
 {
+    @FXML
+    private Button btnEmpleados;
+    @FXML
+    private Button btnEmpleados1;
     @FXML
     private Label btnCorreo;
     private String correoUsuario;
@@ -22,6 +32,15 @@ public class ControladorInicio
     //Panel de Añadir Empleado
     @FXML
     private Pane panelCuerpo;
+    public void bloquearEmpleados()
+    {
+        Empleados empleado= BDautoluxe.obtenerEmpleadoCorreo(correoUsuario);
+        if(!empleado.getRol().contains("Administrador"))
+        {
+            btnEmpleados.setDisable(true);
+            btnEmpleados1.setDisable(true);
+        }
+    }
     @FXML
     private void cerrarVentana() {
         try {
@@ -30,9 +49,10 @@ public class ControladorInicio
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("AutoLuxe");
             nuevaVentana.setScene(new Scene(root,1920,1000));
+            nuevaVentana.getIcons().add(new Image(getClass().getResourceAsStream("/imagenes/LogoAutoLuxe.png")));
             Stage ventanaActual = (Stage) btnCerrarSesion.getScene().getWindow();
-            ventanaActual.close();nuevaVentana.show();
-            contenedor.getChildren().setAll(root);
+            ventanaActual.close();
+            nuevaVentana.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,5 +168,6 @@ public class ControladorInicio
         this.correoUsuario = correo;
         this.btnCorreo.setText(correo);
         System.out.println(correoUsuario);
+        bloquearEmpleados();
     }
 }

@@ -56,7 +56,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button layoutX="10.0" layoutY="119.0" mnemonicParsing="false" onAction="#abrirEmpleadosYRoles" prefHeight="40.0" prefWidth="280.0" style="-fx-cursor: hand;" text="Gestión de empleados y roles" textFill="WHITE">
+                        <Button fx:id="btnEmpleados" layoutX="10.0" layoutY="119.0" mnemonicParsing="false" onAction="#abrirEmpleadosYRoles" prefHeight="40.0" prefWidth="280.0" style="-fx-cursor: hand;" text="Gestión de empleados y roles" textFill="WHITE">
                            <font>
                               <Font size="16.0" />
                            </font>

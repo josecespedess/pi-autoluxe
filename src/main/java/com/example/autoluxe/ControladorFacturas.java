@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -20,6 +21,8 @@ import static java.lang.Float.*;
 
 public class ControladorFacturas
 {
+    @FXML
+    private Button btnEmpleados;
     @FXML
     private Label btnCorreo;
     private String correoUsuario = "";
@@ -91,6 +94,14 @@ public class ControladorFacturas
         iniciarColumnas();
         tablaFactura1=tablaFactura;
         precioTotalPagar1=precioTotalPagar;
+    }
+    public void bloquearEmpleados()
+    {
+        Empleados empleado=BDautoluxe.obtenerEmpleadoCorreo(btnCorreo.getText());
+        if(!empleado.getRol().contains("Administrador"))
+        {
+            btnEmpleados.setDisable(true);
+        }
     }
     // Establecer los DNIs en el ChoiceBox Clientes
     public void establecerDNIClientes() throws SQLException, ClassNotFoundException {
@@ -332,9 +343,9 @@ public class ControladorFacturas
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("AutoLuxe");
             nuevaVentana.setScene(new Scene(root,1920,1000));
+            nuevaVentana.getIcons().add(new Image(getClass().getResourceAsStream("/imagenes/LogoAutoLuxe.png")));
             Stage ventanaActual = (Stage) btnCerrarSesion.getScene().getWindow();
             ventanaActual.close();nuevaVentana.show();
-            contenedor.getChildren().setAll(root);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -461,5 +472,6 @@ public class ControladorFacturas
     public void setCorreoUsuario(String correo) {
         this.correoUsuario = correo;
         this.btnCorreo.setText(correo);
+        bloquearEmpleados();
     }
 }

@@ -51,7 +51,7 @@
                                         </ImageView>
                                     </graphic>
                                 </Button>
-                                <Button layoutX="10.0" layoutY="119.0" mnemonicParsing="false" onAction="#abrirEmpleadosYRoles" prefHeight="40.0" prefWidth="280.0" style="-fx-cursor: hand;" text="Gestión de empleados y roles" textFill="WHITE">
+                                <Button fx:id="btnEmpleados" layoutX="10.0" layoutY="119.0" mnemonicParsing="false" onAction="#abrirEmpleadosYRoles" prefHeight="40.0" prefWidth="280.0" style="-fx-cursor: hand;" text="Gestión de empleados y roles" textFill="WHITE">
                                     <font>
                                         <Font size="16.0" />
                                     </font>
@@ -159,7 +159,7 @@
                             <children>
                                 <Pane fx:id="dashboard" prefHeight="880.0" prefWidth="1620.0" stylesheets="@../../../style/estilo_app.css">
                            <children>
-                              <Button layoutX="60.0" layoutY="62.0" mnemonicParsing="false" onAction="#abrirEmpleadosYRoles" prefHeight="249.0" prefWidth="400.0" text="EMPLEADOS Y ROLES">
+                              <Button fx:id="btnEmpleados1" layoutX="60.0" layoutY="62.0" mnemonicParsing="false" onAction="#abrirEmpleadosYRoles" prefHeight="249.0" prefWidth="400.0" text="EMPLEADOS Y ROLES">
                                  <font>
                                     <Font name="Balance Groovy" size="36.0" />
                                  </font></Button>
